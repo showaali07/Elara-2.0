@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ELARA 2.0 | Multimodal AI Healthcare Triage Assistant</title>
+  <meta name="description" content="ELARA is an intelligent multimodal healthcare triage assistant supporting Voice, Text, and Medical Reports in English, Hindi, and Odia for Patients, Healthcare Workers, and Facility Admins.">
+  
+  <!-- Modern Typography: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Oriya:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-light">
+  <!-- Top Global Header & Mode Bar -->
+  <header class="app-topbar">
+    <div class="topbar-left">
+      <div class="brand-pill" onclick="switchGlobalScreen('splash')">
+        <div class="brand-logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="url(#brandGlow)" />
+            <defs>
+              <linearGradient id="brandGlow" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#10B981" />
+                <stop offset="1" stop-color="#0EA5E9" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">ELARA <span class="badge-version">2.0</span></span>
+          <span class="brand-subtitle">Clinical Triage Assistant</span>
+        </div>
+      </div>
+      <div class="phc-location-chip">
+        <span class="status-pulse-dot"></span>
+        <span class="phc-name">Sharda PHC Navrangpura</span>
+        <span class="abdm-badge">ABDM M3</span>
+      </div>
+    </div>
+
+    <!-- Center View Mode Selector -->
+    <div class="topbar-center">
+      <div class="view-mode-selector" id="viewModeSelector">
+        <button class="view-tab active" data-mode="mobile" onclick="setViewMode('mobile')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+          Interactive Mobile
+        </button>
+        <button class="view-tab" data-mode="storyboard" onclick="setViewMode('storyboard')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          Figma Flow Board (All Screens)
+        </button>
+        <button class="view-tab" data-mode="workstation" onclick="setViewMode('workstation')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Dual Workstation
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Controls: Role Switcher, Language & System Status -->
+    <div class="topbar-right">
+      <div class="lang-selector-group">
+        <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" data-lang="hi" onclick="setLanguage('hi')">हिंदी</button>
+        <button class="lang-btn" data-lang="od" onclick="setLanguage('od')">ଓଡ଼ିଆ</button>
+      </div>
+
+      <div class="role-quick-nav">
+        <span class="role-label">Active Role:</span>
+        <select id="topRoleSelector" onchange="switchUserRole(this.value)">
+          <option value="patient">👤 Patient (Sunita Devi)</option>
+          <option value="nurse">👩⚕️ Healthcare Worker (Sister Priya)</option>
+          <option value="admin">🏥 Facility Admin (Dr. Ananya Roy)</option>
+        </select>
+      </div>
+
+      <button class="icon-btn-header" onclick="openArchDrawer()" title="View System Architecture & Clinical Pipeline">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>Pipeline</span>
+      </button>
+
+      <button class="icon-btn-header" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+        <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Interactive Quick Navigation Bar for Screens -->
+  <div class="flow-step-bar" id="flowStepBar">
+    <div class="flow-steps-inner">
+      <span class="flow-step-label">Flow Screens:</span>
+      <button class="step-chip active" onclick="goToScreen('splash')">1. Splash</button>
+      <button class="step-chip" onclick="goToScreen('role-select')">2. Role Select</button>
+      <button class="step-chip" onclick="goToScreen('consent')">3. Consent</button>
+      <button class="step-chip" onclick="goToScreen('patient-home')">4. Patient Home</button>
+      <button class="step-chip" onclick="goToScreen('multimodal-input')">5. Multimodal Input</button>
+      <button class="step-chip" onclick="goToScreen('ai-processing')">6. AI Pipeline</button>
+      <button class="step-chip" onclick="goToScreen('symptom-summary')">7. Missing Info</button>
+      <button class="step-chip" onclick="goToScreen('triage-summary')">8. Triage Note</button>
+      <button class="step-chip" onclick="goToScreen('hw-dashboard')">9. Nurse Queue</button>
+      <button class="step-chip" onclick="goToScreen('hw-review')">10. Clinical Review</button>
+      <button class="step-chip" onclick="goToScreen('referral-prep')">11. Referral Handover</button>
+      <button class="step-chip" onclick="goToScreen('facility-admin')">12. Facility Admin</button>
+    </div>
+    <div class="flow-stats-quick">
+      <span class="live-tag"><span class="live-dot"></span> Queue: <b>28</b> cases</span>
+      <span class="urgent-tag">🔴 <b>3</b> Urgent</span>
+      <span class="priority-tag">🟡 <b>8</b> Priority</span>
+    </div>
+  </div>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="app-main-viewport">
+    
+    <!-- 1. MOBILE INTERACTIVE DEVICE CONTAINER -->
+    <div class="mobile-device-wrapper" id="mobileDeviceWrapper">
+      <div class="smartphone-frame">
+        <!-- Phone Speaker & Notch -->
+        <div class="phone-dynamic-island">
+          <div class="island-camera"></div>
+          <div class="island-indicator" id="islandPulse"></div>
+        </div>
+
+        <!-- Phone Status Bar -->
+        <div class="phone-status-bar">
+          <span class="status-time" id="statusClock">09:41</span>
+          <div class="status-icons">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+            <span class="signal-bars">●●●●</span>
+            <span class="battery-pill">98% 🔋</span>
+          </div>
+        </div>
+
+        <!-- Phone Screen Content Viewport -->
+        <div class="phone-screen-content" id="phoneScreen">
+          
+          <!-- ================= SCREEN 1: SPLASH ================= -->
+          <section class="screen-view active" id="screen-splash">
+            <div class="splash-card">
+              <div class="splash-hero-glow"></div>
+              <div class="splash-logo-box">
+                <div class="logo-sparkle-ring">
+                  <svg width="54" height="54" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="#10B981" />
+                    <circle cx="12" cy="12" r="3" fill="#ffffff" />
+                  </svg>
+                </div>
+              </div>
+              <h1 class="splash-title">ELARA</h1>
+              <p class="splash-tagline">Smarter Triage, Faster Care.</p>
+              <div class="tag-badge-accent">Healthcare at the Center</div>
+
+              <div class="splash-info-card">
+                <div class="info-row">
+                  <span class="info-icon">⚡</span>
+                  <div>
+                    <strong>AI-Powered Clinical Assist</strong>
+                    <p>Rapid symptom synthesis & urgency stratification</p>
+                  </div>
+                </div>
+                <div class="info-row">
+                  <span class="info-icon">🌐</span>
+                  <div>
+                    <strong>Multilingual Indian Languages</strong>
+                    <p>Voice-first intake in Hindi, Odia & English</p>
+                  </div>
+                </div>
+                <div class="info-row">
+                  <span class="info-icon">🛡️</span>
+                  <div>
+                    <strong>Human-in-the-Loop Safeguards</strong>
+                    <p>Decision support only; final clinical review by nurse</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="splash-actions">
+                <button class="btn-primary-gradient" onclick="goToScreen('role-select')">
+                  <span>Get Started</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+                <div class="splash-disclaimer">
+                  ⚠️ <b>For triage support only.</b> Not a diagnostic system. In emergency, call 108 or proceed to emergency triage.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= SCREEN 2: ROLE SELECTION ================= -->
+          <section class="screen-view" id="screen-role-select">
+            <div class="screen-header-nav">
+              <button class="back-nav-btn" onclick="goToScreen('splash')">←</button>
+              <div class="header-center-logo">
+                <span class="logo-dot"></span> ELARA
+              </div>
+              <div class="mini-lang-pill">
+                <span onclick="setLanguage('en')">EN</span> | <span onclick="setLanguage('hi')">हि</span>
+              </div>
+            </div>
+
+            <div class="screen-scrollable-body">
+              <div class="welcome-banner">
+                <h2 class="welcome-heading">Welcome to ELARA 💜</h2>
+                <p class="welcome-sub">Choose how you wish to continue to access smart healthcare triage:</p>
+              </div>
+
+              <!-- Role 1: Patient / Citizen -->
+              <div class="role-select-card active" onclick="selectRoleCard(this, 'patient')">
+                <div class="role-card-badge primary">Primary</div>
+                <div class="role-icon-box patient-color">👤</div>
+                <div class="role-details">
+                  <h3 class="role-name" data-i18n="role_patient">Patient / Citizen</h3>
+                  <p class="role-desc" data-i18n="role_patient_desc">Describe symptoms in voice or text, upload lab reports, and get a triage review.</p>
+                </div>
+                <div class="role-radio"><div class="radio-dot"></div></div>
+              </div>
+
+              <!-- Role 2: Healthcare Worker / Nurse -->
+              <div class="role-select-card" onclick="selectRoleCard(this, 'nurse')">
+                <div class="role-icon-box nurse-color">👩⚕️</div>
+                <div class="role-details">
+                  <h3 class="role-name" data-i18n="role_nurse">Healthcare Worker / Nurse</h3>
+                  <p class="role-desc" data-i18n="role_nurse_desc">Review incoming patient triage queue, verify clinical notes, and refer to doctor.</p>
+                </div>
+                <div class="role-radio"><div class="radio-dot"></div></div>
+              </div>
+
+              <!-- Role 3: Facility Admin / PHC Incharge -->
+              <div class="role-select-card" onclick="selectRoleCard(this, 'admin')">
+                <div class="role-icon-box admin-color">🏥</div>
+                <div class="role-details">
+                  <h3 class="role-name" data-i18n="role_admin">Facility Admin / PHC Incharge</h3>
+                  <p class="role-desc" data-i18n="role_admin_desc">Monitor live case load, urgent queue, turnaround times, and PHC language analytics.</p>
+                </div>
+                <div class="role-radio"><div class="radio-dot"></div></div>
+              </div>
+
+              <!-- ABHA ID / Mobile Number Input -->
+              <div class="auth-input-block">
+                <label class="form-label-small">Mobile Number or ABHA ID</label>
+                <div class="input-with-icon">
+                  <span class="field-icon">📱</span>
+                  <input type="text" id="authInput" placeholder="Enter 10-digit mobile or ABHA ID" value="98765-43210" class="input-text">
+                </div>
+              </div>
+
+              <button class="btn-primary-gradient" onclick="proceedFromRoleSelect()">
+                <span id="roleCtaText">Send OTP & Continue →</span>
+              </button>
+
+              <div class="demo-quick-link" onclick="quickFillDemoPatient()">
+                ✨ Quick Demo: Auto-load Patient <b>Sunita Devi (P-1042)</b>
+              </div>
+
+              <!-- Clinical Safety Footer Note -->
+              <div class="safety-advisory-box">
+                <div class="safety-title">
+                  <span>🛡️ Privacy & Clinical Safety</span>
+                </div>
+                <p>Your information is processed with privacy-first intent & real human-in-the-loop oversight. At no point will this AI prescribe medicines or override clinical staff.</p>
+                <div class="compliance-tags">
+                  <span>ABDM Compliant</span>
+                  <span>HIPAA Aligned</span>
+                  <span>AES-256 Encrypted</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= SCREEN 3: PRIVACY & CONSENT ================= -->
+          <section class="screen-view" id="screen-consent">
+            <div class="screen-header-nav">
+              <button class="back-nav-btn" onclick="goToScreen('role-select')">←</button>
+              <div class="header-center-title">Privacy & Consent</div>
+              <div class="header-right-blank"></div>
+            </div>
+
+            <div class="screen-scrollable-body">
+              <div class="consent-icon-header">
+                <div class="shield-lock-icon">🔐</div>
+                <h3 class="consent-title">Your Health Data Privacy</h3>
+                <p class="consent-lead">ELARA strictly enforces Indian Digital Personal Data Protection (DPDP) and Ayushman Bharat Digital Mission (ABDM) standards.</p>
+              </div>
+
+              <div class="consent-bullet-card">
+                <div class="bullet-item">
+                  <span class="chk-icon">✓</span>
+                  <div>
+                    <strong>Minimal Data Collection</strong>
+                    <p>Only essential vitals, acute symptoms, and relevant lab metrics are collected.</p>
+                  </div>
+                </div>
+                <div class="bullet-item">
+                  <span class="chk-icon">✓</span>
+                  <div>
+                    <strong>Role-Based Access Control (RBAC)</strong>
+                    <p>Only assigned nurses and PHC medical officers can access your identifiable records.</p>
+                  </div>
+                </div>
+                <div class="bullet-item">
+                  <span class="chk-icon">✓</span>
+                  <div>
+                    <strong>Immutable Audit Logs</strong>
+                    <p>Every AI prediction and healthcare worker verification is timestamped.</p>
+                  </div>
+                </div>
+                <div class="bullet-item">
+                  <span class="chk-icon">✓</span>
+                  <div>
+                    <strong>Zero Diagnostic Claim</strong>
+                    <p>ELARA assists human triage priority and does NOT produce a final medical diagnosis.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="consent-checkbox-area">
+                <label class="custom-checkbox-label">
+                  <input type="checkbox" id="consentCheckbox" checked>
+                  <span class="checkbox-visual"></span>
+                  <span class="checkbox-text">
+                    I consent to processing my symptoms, voice recordings, and reports strictly for clinical triage support at Sharda PHC.
+                  </span>
+                </label>
+              </div>
+
+              <div class="consent-actions">
+                <button class="btn-primary-gradient" onclick="grantConsentAndContinue()">
+                  <span>Give Consent & Continue</span>
+                </button>
+                <button class="btn-secondary-outline" onclick="goToScreen('role-select')">
+                  Cancel & Return
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= SCREEN 4: PATIENT INTAKE HOME ================= -->
+          <section class="screen-view" id="screen-patient-home">
+            <div class="patient-top-bar">
+              <div class="greeting-box">
+                <div class="facility-badge-small">
+                  <span class="dot-online"></span> Sharda Hospital Navrangpura
+                </div>
+                <h2 class="patient-greeting">Good morning, Sunita 👋</h2>
+                <p class="patient-subgreeting">Let's understand how you're feeling today.</p>
+              </div>
+              <div class="patient-avatar-badge" onclick="goToScreen('role-select')">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%230F766E'><circle cx='12' cy='8' r='4'/><path d='M20 21a8 8 0 1 0-16 0'/></svg>" alt="Sunita">
+                <span class="badge-pid">P-1042</span>
+              </div>
+            </div>
+
+            <div class="screen-scrollable-body">
+              <!-- Language Switcher Strip -->
+              <div class="quick-lang-strip">
+                <span class="strip-label">Triage Language:</span>
+                <div class="lang-pills">
+                  <button class="lang-pill active" onclick="setLanguage('en')">English</button>
+                  <button class="lang-pill" onclick="setLanguage('hi')">हिंदी</button>
+                  <button class="lang-pill" onclick="setLanguage('od')">ଓଡ଼ିଆ</button>
+                </div>
+              </div>
+
+              <!-- Big Voice Triage Hero Banner -->
+              <div class="voice-hero-banner" onclick="startTriageMethod('voice')">
+                <div class="hero-content">
+                  <span class="hero-badge">VOICE-FIRST INTAKE</span>
+                  <h3 class="hero-title">Need help describing your symptoms?</h3>
+                  <p class="hero-text">Speak naturally in your preferred language or upload a prescription/lab test.</p>
+                  <button class="btn-hero-voice">
+                    <span class="mic-wave-icon">🎙️</span>
+                    <span>Start Voice Triage</span>
+                  </button>
+                </div>
+                <div class="hero-glow-sphere"></div>
+              </div>
+
+              <!-- Triage Methods Selection -->
+              <div class="section-title-group">
+                <h4 class="section-heading">Triage Methods</h4>
+                <span class="section-helper">Choose whatever is fastest for you</span>
+              </div>
+
+              <div class="triage-method-card active-card" onclick="startTriageMethod('voice')">
+                <div class="method-icon-wrap voice-icon-bg">🎤</div>
+                <div class="method-info">
+                  <div class="method-title-row">
+                    <span class="method-title">Voice Note</span>
+                    <span class="pill-rec">Recommended</span>
+                  </div>
+                  <p class="method-desc">Speak in Hindi, Odia, or English freely. AI extracts symptoms & duration.</p>
+                </div>
+                <div class="method-arrow">→</div>
+              </div>
+
+              <div class="triage-method-card" onclick="startTriageMethod('text')">
+                <div class="method-icon-wrap text-icon-bg">📝</div>
+                <div class="method-info">
+                  <div class="method-title-row">
+                    <span class="method-title">Interactive Form</span>
+                  </div>
+                  <p class="method-desc">Type your symptoms step-by-step with guided quick buttons.</p>
+                </div>
+                <div class="method-arrow">→</div>
+              </div>
+
+              <div class="triage-method-card" onclick="startTriageMethod('report')">
+                <div class="method-icon-wrap report-icon-bg">📷</div>
+                <div class="method-info">
+                  <div class="method-title-row">
+                    <span class="method-title">Scan Document / Lab Report</span>
+                  </div>
+                  <p class="method-desc">Upload photos of CBC, Dengue tests, or prescription slip.</p>
+                </div>
+                <div class="method-arrow">→</div>
+              </div>
+
+              <!-- Community Advisory Alert -->
+              <div class="community-alert-box">
+                <span class="alert-icon">📢</span>
+                <div>
+                  <strong>Health Center Advisory in Navrangpura</strong>
+                  <p>Viral fever & monsoon vector illness spike detected. Report sudden chills or high fever immediately.</p>
+                </div>
+              </div>
+
+              <!-- Recent Cases / History -->
+              <div class="recent-cases-box">
+                <div class="recent-header">
+                  <span>Recent PHC Triage Cases</span>
+                  <span class="view-all-link">Live Queue</span>
+                </div>
+                <div class="case-item">
+                  <span class="case-badge-pill urgent">🔴 High Fever & Cephalea</span>
+                  <span class="case-id">P-1042 • Sunita Devi (Active)</span>
+                </div>
+                <div class="case-item">
+                  <span class="case-badge-pill priority">🟡 Cough & Dyspnea</span>
+                  <span class="case-id">P-1043 • Rajesh Kumar (Waiting)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom App Navigation Bar -->
+            <div class="mobile-bottom-nav">
+              <button class="nav-item active" onclick="goToScreen('patient-home')">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+              </button>
+              <button class="nav-item" onclick="startTriageMethod('voice')">
+                <span class="nav-icon">🩺</span>
+                <span>Triage</span>
+              </button>
+              <button class="nav-item" onclick="goToScreen('symptom-summary')">
+                <span class="nav-icon">📋</span>
+                <span>Summary</span>
+              </button>
+              <button class="nav-item" onclick="switchUserRole('nurse')">
+                <span class="nav-icon">👩⚕️</span>
+                <span>Worker View</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- ================= SCREEN 5: MULTIMODAL INPUT ================= -->
+          <section class="screen-view" id="screen-multimodal-input">
+            <div class="screen-header-nav">
+              <button class="back-nav-btn" onclick="goToScreen('patient-home')">←</button>
+              <div class="header-center-title">
+                <span>Active Symptom Triage</span>
+                <span class="header-sub-id">ID: P-1042 • Step 1 of 2</span>
+              </div>
+              <div class="header-action-tag" onclick="resetDemoInputs()">Reset</div>
+            </div>
+
+            <div class="screen-scrollable-body">
+              <!-- Patient Info Pill -->
+              <div class="patient-context-strip">
+                <div class="p-avatar-small">S</div>
+                <div class="p-meta">
+                  <div class="p-name">Sunita Devi <span class="p-badge">42 F</span></div>
+                  <div class="p-sub">Navrangpura Ward 4 • Primary Case</div>
+                </div>
+                <div class="lang-toggle-small">
+                  <button class="lang-chip active" onclick="setLanguage('hi')">हिंदी</button>
+                  <button class="lang-chip" onclick="setLanguage('en')">EN</button>
+                </div>
+              </div>
+
+              <!-- Multimodal Mode Tabs -->
+              <div class="multimodal-tabs">
+                <button class="input-tab-btn active" id="tabBtnVoice" onclick="switchInputTab('voice')">
+                  <span>🎤 Voice Note</span>
+                </button>
+                <button class="input-tab-btn" id="tabBtnText" onclick="switchInputTab('text')">
+                  <span>📝 Text Form</span>
+                </button>
+                <button class="input-tab-btn" id="tabBtnReport" onclick="switchInputTab('report')">
+                  <span>📄 Lab Reports</span>
+                </button>
+              </div>
+
+              <!-- TAB 1: VOICE INPUT -->
+              <div class="tab-pane active" id="pane-voice">
+                <div class="voice-recorder-container">
+                  <div class="waveform-box">
+                    <canvas id="audioWaveformCanvas" width="300" height="70"></canvas>
+                  </div>
+
+                  <!-- Big Interactive Mic Pulse Button -->
+                  <div class="mic-pulse-wrapper">
+                    <div class="mic-glow-ring ring-1"></div>
+                    <div class="mic-glow-ring ring-2"></div>
+                    <button class="mic-main-btn" id="mainMicBtn" onclick="toggleVoiceRecording()">
+                      <div class="mic-icon-svg" id="micIconSvg">
+                        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                          <line x1="12" y1="19" x2="12" y2="23"></line>
+                          <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                      </div>
+                      <span class="mic-state-label" id="micStateLabel">Tap to Speak</span>
+                    </button>
+                  </div>
+
+                  <div class="recording-timer" id="recordingTimer">00:08 / 02:00</div>
+
+                  <!-- Preset Simulated Audio Recordings -->
+                  <div class="voice-presets-group">
+                    <span class="preset-label">Or choose realistic patient voice sample:</span>
+                    <div class="preset-buttons">
+                      <button class="preset-btn active" onclick="loadVoicePreset('fever')">
+                        🔴 Sunita: High Fever & Headache (Hindi)
+                      </button>
+                      <button class="preset-btn" onclick="loadVoicePreset('chest')">
+                        🔴 Amit: Chest Tightness & Chills (English)
+                      </button>
+                      <button class="preset-btn" onclick="loadVoicePreset('odia')">
+                        🟡 Anita: Severe joint swelling (Odia)
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Live Transcription Box -->
+                  <div class="transcription-card">
+                    <div class="transcription-header">
+                      <span class="stt-badge">🎙️ LIVE SPEECH-TO-TEXT (WHISPER / VANI)</span>
+                      <span class="confidence-tag">98% Confidence</span>
+                    </div>
+                    <div class="transcription-body-hindi" id="hindiTranscription">
+                      "मुझे कल रात से तेज़ बुखार और सिरदर्द है... नींद नहीं आ रही है और बदन दर्द भी है।"
+                    </div>
+                    <div class="translation-divider"></div>
+                    <div class="translation-header">
+                      <span class="trans-badge">🌐 CLINICAL TRANSLATION (ENGLISH)</span>
+                    </div>
+                    <div class="transcription-body-english" id="englishTranslation">
+                      "I have high fever and severe headache since last night with chills, cannot sleep, and generalized body ache."
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TAB 2: TEXT FORM INPUT -->
+              <div class="tab-pane" id="pane-text">
+                <div class="text-form-container">
+                  <label class="form-label-small">Describe how you feel:</label>
+                  <textarea id="manualSymptomInput" class="custom-textarea" rows="3" placeholder="e.g. Started having sudden fever yesterday evening with severe headache and weakness...">High fever since yesterday night, throbbing headache, feeling cold and shivering.</textarea>
+
+                  <label class="form-label-small">Quick Symptoms Selection:</label>
+                  <div class="symptom-chips-picker">
+                    <button class="s-chip active" onclick="toggleSymptomChip(this, 'Fever with Chills')">🌡️ Fever with Chills</button>
+                    <button class="s-chip active" onclick="toggleSymptomChip(this, 'Throbbing Headache')">🤕 Throbbing Headache</button>
+                    <button class="s-chip active" onclick="toggleSymptomChip(this, 'Body Ache')">💪 Body Ache</button>
+                    <button class="s-chip" onclick="toggleSymptomChip(this, 'Cough & Sore Throat')">😷 Cough</button>
+                    <button class="s-chip" onclick="toggleSymptomChip(this, 'Nausea & Vomiting')">🤢 Nausea</button>
+                    <button class="s-chip" onclick="toggleSymptomChip(this, 'Difficulty Breathing')">🫁 Shortness of breath</button>
+                  </div>
+
+                  <label class="form-label-small">Duration of symptoms:</label>
+                  <div class="duration-selector">
+                    <button class="dur-btn active" onclick="setDuration(this, '1 day')">1 Day (< 24h)</button>
+                    <button class="dur-btn" onclick="setDuration(this, '2-3 days')">2-3 Days</button>
+                    <button class="dur-btn" onclick="setDuration(this, '1 week')">1 Week</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TAB 3: REPORT UPLOAD -->
+              <div class="tab-pane" id="pane-report">
+                <div class="report-upload-container">
+                  <div class="dropzone-box" onclick="triggerReportUpload()">
+                    <div class="drop-icon">📄</div>
+                    <div class="drop-title">Upload / Capture Medical Report</div>
+                    <div class="drop-sub">Drag & drop or take a photo of CBC, Dengue, or prescription</div>
+                    <button class="btn-choose-file">Choose Image / PDF</button>
+                  </div>
+
+                  <!-- Preset Reports -->
+                  <div class="report-presets">
+                    <span class="preset-label">Or load sample verified lab report:</span>
+                    <div class="report-pill-selector">
+                      <button class="report-pill active" onclick="loadSampleReport('cbc')">🩸 CBC Blood Report (Recent)</button>
+                      <button class="report-pill" onclick="loadSampleReport('dengue')">🦟 Dengue NS1 Serology</button>
+                    </div>
+                  </div>
+
+                  <!-- OCR Extracted Information Card -->
+                  <div class="extracted-ocr-card">
+                    <div class="ocr-card-header">
+                      <span class="ocr-title">📋 AI EXTRACTED LAB VALUES (OCR)</span>
+                      <span class="verified-chip">Verified Match</span>
+                    </div>
+
+                    <div class="ocr-grid">
+                      <div class="ocr-item">
+                        <span class="ocr-label">Hemoglobin</span>
+                        <span class="ocr-val" id="ocrHb">11.2 g/dL</span>
+                        <span class="ocr-flag status-warn">Slightly Low</span>
+                      </div>
+                      <div class="ocr-item">
+                        <span class="ocr-label">Total WBC Count</span>
+                        <span class="ocr-val" id="ocrWbc">8,200 /µL</span>
+                        <span class="ocr-flag status-normal">Normal</span>
+                      </div>
+                      <div class="ocr-item">
+                        <span class="ocr-label">Platelets</span>
+                        <span class="ocr-val" id="ocrPlatelets">2.1 lakh/µL</span>
+                        <span class="ocr-flag status-normal">Normal</span>
+                      </div>
+                    </div>
+
+                    <div class="ocr-disclaimer">
+                      ⚠️ <b>Verify extracted values:</b> Always cross-check extracted numbers with original physical report before clinical prescription.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Action Button -->
+              <div class="process-action-bar">
+                <button class="btn-primary-gradient" onclick="startAIProcessingPipeline()">
+                  <span>Process Symptoms with AI ✨</span>
+                </button>
+                <div class="privacy-note-small">
+                  🔒 Encrypted on-device • Sent directly to Sharda PHC Clinical Desk
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= SCREEN 6: AI PROCESSING PIPELINE ================= -->
+          <section class="screen-view" id="screen-ai-processing">
+            <div class="screen-header-nav">
+              <button class="back-nav-btn" onclick="goToScreen('multimodal-input')">←</button>
+              <div class="header-center-title">Active Symptom Triage</div>
+              <div class="header-right-blank"></div>
+            </div>
+
+            <div class="screen-scrollable-body text-center">
+              <div class="ai-processing-header">
+                <div class="ai-radar-anim">
+                  <div class="radar-circle radar-1"></div>
+                  <div class="radar-circle radar-2"></div>
+                  <div class="radar-circle radar-3"></div>
+                  <div class="radar-center-core">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="9" stroke="#10B981" stroke-width="2" />
+                      <circle cx="12" cy="12" r="4" fill="#0F766E" />
+                    </svg>
+                  </div>
+                </div>
+                <h3 class="pipeline-title">Analyzing & Structuring Triage Note...</h3>
+                <p class="pipeline-sub">Converting multimodal inputs into clinical context</p>
+
+                <!-- Synthesis Progress Bar -->
+                <div class="synthesis-progress-wrap">
+                  <div class="synthesis-bar-fill" id="synthesisProgressBar"></div>
+                </div>
+                <div class="synthesis-status-text">
+                  <span>Clinical Synthesis</span>
+                  <span id="synthesisPercent">78% Complete</span>
+                </div>
+              </div>
+
+              <!-- Live Pipeline Steps -->
+              <div class="pipeline-checklist">
+                <div class="pipeline-card-title">⚡ LIVE PROCESSING PIPELINE</div>
+
+                <div class="p-step-item done" id="pipeStep1">
+                  <div class="step-check">✓</div>
+                  <div class="step-content">
+                    <div class="step-name">Voice converted to text</div>
+                    <div class="step-detail">Real-time STT recorded • 98% confidence score</div>
+                  </div>
+                </div>
+
+                <div class="p-step-item done" id="pipeStep2">
+                  <div class="step-check">✓</div>
+                  <div class="step-content">
+                    <div class="step-name">Language understood & translated</div>
+                    <div class="step-detail">Standardized to English clinical terminology</div>
+                  </div>
+                </div>
+
+                <div class="p-step-item in-progress" id="pipeStep3">
+                  <div class="step-check"><div class="mini-spinner"></div></div>
+                  <div class="step-content">
+                    <div class="step-name">Core symptoms identified</div>
+                    <div class="step-detail">Fever with Chills, Severe throbbing headache, Body ache</div>
+                  </div>
+                </div>
+
+                <div class="p-step-item pending" id="pipeStep4">
+                  <div class="step-check">○</div>
+                  <div class="step-content">
+                    <div class="step-name">Report information extracted</div>
+                    <div class="step-detail">CBC hematology verified: Hemoglobin 11.2, Platelets 2.1L</div>
+                  </div>
+                </div>
+
+                <div class="p-step-item pending" id="pipeStep5">
+                  <div class="step-check">○</div>
+                  <div class="step-content">
+                    <div class="step-name">Preparing triage summary & urgency</div>
+                    <div class="step-detail">Applying emergency triage protocol matrix</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Transparency & Safety Box -->
+              <div class="transparency-note-card">
+                <div class="t-badge">🛡️ Transparency & Explainability</div>
+                <p>This system identifies clinical risk indicators for human healthcare decision-makers. It does <b>NOT</b> generate a final medical diagnosis or prescribe medications.</p>
+              </div>
+
+              <div class="pipeline-actions">
+                <button class="btn-secondary-outline" onclick="goToScreen('multimodal-input')">
+                  Cancel & Edit Inputs
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= SCREEN 7: SYMPTOM SUMMARY & MISSING INFO ================= -->
+          <section class="screen-view" id="screen-symptom-summary">
+            <div class="screen-header-nav">
+              <button class="back-nav-btn" onclick="goToScreen('multimodal-input')">←</button>
+              <div class="header-center-title">Symptom Summary</div>
+              <div class="header-right-blank"></div>
+            </div>
+
+            <div class="screen-scrollable-body">
+              <div class="summary-top-card">
+                <div class="card-tag">📝 Reported Symptoms</div>
+                <ul class="symptom-bullet-list">
+                  <li>
+                    <span class="bullet-dot red"></span>
+                    <div>
+                      <strong>Fever with Chills</strong>
+                      <p>Started: Yesterday evening • Severity: High</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="bullet-dot amber"></span>
+                    <div>
+                      <strong>Throbbing Frontal Headache</strong>
+                      <p>Continuous, worsened by light</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="bullet-dot green"></span>
+                    <div>
+                      <strong>Generalized Body Ache & Malaise</strong>
+                      <p>Difficulty sleeping, fatigue</p>
+                    </div>
+                  </li>
+                </ul>
+
+                <div class="duration-badge-row">
+                  <span class="d-label">Total Duration:</span>
+                  <span class="d-value">~1 day (acute onset)</span>
+                </div>
+              </div>
+
+              <!-- Missing Information Identified Card (CRITICAL REQUIREMENT) -->
+              <div class="missing-info-card">
+                <div class="missing-header">
+                  <span class="warn-triangle">⚠️</span>
+                  <div>
+                    <h4 class="missing-title">Identified Missing Information</h4>
+                    <p class="missing-desc">ELARA identified key clinical parameters required before doctor review:</p>
+                  </div>
+                </div>
+
+                <div class="missing-items-list">
+                  <!-- Missing Item 1: Temperature -->
+                  <div class="missing-item-row" id="missingTempRow">
+                    <div class="m-icon">🌡️</div>
+                    <div class="m-details">
+                      <strong>Exact Body Temperature</strong>
+                      <p id="tempValueStatus">Higher than normal according to patient, but exact reading unrecorded.</p>
+                    </div>
+                    <button class="btn-quick-add" id="btnAddTemp" onclick="resolveMissingInfo('temp')">
+                      + Add (102.4°F)
+                    </button>
+                  </div>
+
+                  <!-- Missing Item 2: Medication History -->
+                  <div class="missing-item-row" id="missingMedRow">
+                    <div class="m-icon">💊</div>
+                    <div class="m-details">
+                      <strong>Medication & Allergy History</strong>
+                      <p id="medValueStatus">Patient has not logged known medicine allergies or recent antipyretics.</p>
+                    </div>
+                    <button class="btn-quick-add" id="btnAddMed" onclick="resolveMissingInfo('med')">
+                      + Add (Paracetamol)
+                    </button>
+                  </div>
+
+                  <!-- Missing Item 3: Associated Red Flags -->
+                  <div class="missing-item-row" id="missingFlagRow">
+                    <div class="m-icon">🚩</div>
+                    <div class="m-details">
+                      <strong>Associated Warning Signs</strong>
+                      <p id="flagValueStatus">Any stiff neck, skin rashes, or persistent vomiting?</p>
+                    </div>
+                    <button class="btn-quick-add" id="btnAddFlags" onclick="resolveMissingInfo('flags')">
+                      + Confirm None
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Actions -->
+              <div class="summary-actions">
+                <button class="btn-primary-gradient" onclick="goToScreen('triage-summary')">
+                  <span>Generate Triage Note 📋</span>
+                </button>
+                <button class="btn-secondary-outline" onclick="goToScreen('multimodal-input')">
+                  Add More Symptoms / Reports
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= SCREEN 8: TRIAGE RESULT & CLINICAL SUMMARY ================= -->
+          <section class="screen-view" id="screen-triage-summary">
+            <div class="screen-header-nav">
+              <button class="back-nav-btn" onclick="goToScreen('symptom-summary')">←</button>
+              <div class="header-center-title">Triage Result & Clinical Summary</div>
+              <div class="header-right-blank"></div>
+            </div>
+
+            <div class="screen-scrollable-body">
+              <!-- Patient Info Header -->
+              <div class="triage-patient-bar">
+                <div class="tp-avatar">S</div>
+                <div class="tp-meta">
+                  <div class="tp-name">Sunita Devi <span class="tp-age">42 F</span></div>
+                  <div class="tp-sub">Patient ID: <b>P-1042</b> • Sharda PHC</div>
+                </div>
+                <div class="tp-time">Recorded: 12 min ago</div>
+              </div>
+
+              <!-- Clinical Priority Status Banner -->
+              <div class="priority-banner urgent" id="priorityStatusBanner">
+                <div class="p-banner-icon">🔴</div>
+                <div class="p-banner-text">
+                  <div class="p-badge-line">CLINICAL PRIORITY STATUS</div>
+                  <h3 class="p-main-title" id="triagePriorityTitle">HIGH URGENCY REVIEW SUGGESTED</h3>
+                  <p class="p-advice" id="triagePriorityRationale">Prompt clinical assessment recommended within 30 minutes to manage worsening acute symptoms.</p>
+                </div>
+              </div>
+
+              <!-- Clinical Guidance Note -->
+              <div class="clinical-guidance-pill">
+                <span class="cg-icon">🛡️</span>
+                <div>
+                  <strong>Clinical Guidance Note:</strong> AI-generated triage support. Final decision must be made by qualified healthcare professional. Not a definitive medical diagnosis.
+                </div>
+              </div>
+
+              <!-- Duty Medical Officer Info -->
+              <div class="duty-doctor-strip">
+                <div class="doc-avatar">👩⚕️</div>
+                <div class="doc-info">
+                  <div class="doc-role">DUTY MEDICAL OFFICER</div>
+                  <div class="doc-name">Dr. Ananya Roy, MBBS</div>
+                  <div class="doc-sub">Sharda PHC Navrangpura • Triage Desk 1</div>
+                </div>
+              </div>
+
+              <!-- Reported Symptoms Structured Cards -->
+              <div class="triage-section-card">
+                <div class="t-section-header">
+                  <span>Reported Symptoms</span>
+                  <span class="count-tag">3 verified</span>
+                </div>
+                <div class="symptom-card-item">
+                  <div class="s-dot red"></div>
+                  <div class="s-body">
+                    <strong>Fever with Chills</strong>
+                    <p>Onset approximately 24 hours ago; shivering reported by patient.</p>
+                  </div>
+                  <span class="s-duration-chip">24 hrs</span>
+                </div>
+                <div class="symptom-card-item">
+                  <div class="s-dot amber"></div>
+                  <div class="s-body">
+                    <strong>Throbbing Frontal Headache</strong>
+                    <p>Persistent bilateral pain; heightened by bright daylight exposure.</p>
+                  </div>
+                  <span class="s-duration-chip">Acute</span>
+                </div>
+                <div class="symptom-card-item">
+                  <div class="s-dot green"></div>
+                  <div class="s-body">
+                    <strong>Mild Fatigue & Generalized Body Ache</strong>
+                    <p>Generalized weakness, able to ambulate unassisted.</p>
+                  </div>
+                  <span class="s-duration-chip">Moderate</span>
+                </div>
+              </div>
+
+              <!-- Extracted Lab Values from CBC -->
+              <div class="triage-section-card">
+                <div class="t-section-header">
+                  <span>Extracted from CBC Report</span>
+                  <span class="report-date-tag">Report: CBC_1042_0925.pdf</span>
+                </div>
+                <div class="lab-metrics-row">
+                  <div class="lab-pill">
+                    <span class="lab-name">Hemoglobin</span>
+                    <span class="lab-num">11.2</span>
+                    <span class="lab-unit">g/dL</span>
+                    <span class="lab-state warn">Slightly Low</span>
+                  </div>
+                  <div class="lab-pill">
+                    <span class="lab-name">WBC (TLC)</span>
+                    <span class="lab-num">8,200</span>
+                    <span class="lab-unit">/µL</span>
+                    <span class="lab-state ok">Normal</span>
+                  </div>
+                  <div class="lab-pill">
+                    <span class="lab-name">Platelets</span>
+                    <span class="lab-num">2.1 L</span>
+                    <span class="lab-unit">/µL</span>
+                    <span class="lab-state ok">Adequate</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Resolved / Missing Info -->
+              <div class="triage-section-card">
+                <div class="t-section-header">
+                  <span>Vitals & Clinical Context</span>
+                </div>
+                <div class="context-grid">
+                  <div class="context-item">
+                    <span class="c-key">Recorded Temp:</span>
+                    <span class="c-val" id="summaryTempDisplay">102.4 °F (Febrile)</span>
+                  </div>
+                  <div class="context-item">
+                    <span class="c-key">Current Meds:</span>
+                    <span class="c-val" id="summaryMedDisplay">Paracetamol 650mg taken 4 hrs ago</span>
+                  </div>
+                  <div class="context-item">
+                    <span class="c-key">Known Allergies:</span>
+                    <span class="c-val">No known drug allergies (NKDA)</span>
+                  </div>
+                  <div class="context-item">
+                    <span class="c-key">Danger Signs:</span>
+                    <span class="c-val">No neck rigidity, no petechial rash</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- AI Clinical Triage Synthesis -->
+              <div class="ai-synthesis-paragraph-box">
+                <div class="synth-title">🤖 AI Clinical Triage Synthesis</div>
+                <p class="synth-text" id="aiSynthesisText">
+                  "Acute febrile illness presentation with severe cephalea. Stable hematological profile on attached CBC. Recommended for targeted vitals measurement (Temp 102.4°F recorded) and urgent malaria/dengue screening by duty doctor."
+                </p>
+                <div class="synth-footer">
+                  <span>Synthesized with ELARA Clinical Logic Engine 2.0</span>
+                </div>
+              </div>
+
+              <!-- Send to Healthcare Worker Button -->
+              <div class="triage-footer-actions">
+                <button class="btn-primary-gradient" onclick="sendToHealthcareWorker()">
+                  <span>Send for Healthcare Worker Review 🚀</span>
+                </button>
+                <div class="worker-note">
+                  Dispatches encrypted token to Sister Priya (Desk 2)
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= SCREEN 9: HEALTHCARE WORKER DASHBOARD ================= -->
+          <section class="screen-view" id="screen-hw-dashboard">
+            <div class="hw-topbar">
+              <div class="hw-title-area">
+                <span class="badge-role-hw">👩⚕️ HEALTHCARE WORKER CONSOLE</span>
+                <h3 class="hw-heading">Today's Triage Queue</h3>
+                <span class="hw-sub">Sister Priya • Desk 2 (Sharda PHC)</span>
+              </div>
+              <button class="icon-refresh-btn" onclick="refreshQueue()" title="Refresh Queue">🔄</button>
+            </div>
+
+            <div class="screen-scrollable-body">
+              <!-- Urgent / Priority / Routine Stat Badges -->
+              <div class="queue-stat-cards">
+                <div class="stat-card urgent active" onclick="filterQueue('urgent')">
+                  <div class="stat-num" id="hwUrgentCount">03</div>
+                  <div class="stat-lbl">🔴 Urgent Review</div>
+                </div>
+                <div class="stat-card priority" onclick="filterQueue('priority')">
+                  <div class="stat-num" id="hwPriorityCount">08</div>
+                  <div class="stat-lbl">🟡 Priority</div>
+                </div>
+                <div class="stat-card routine" onclick="filterQueue('routine')">
+                  <div class="stat-num" id="hwRoutineCount">17</div>
+                  <div class="stat-lbl">🟢 Routine</div>
+                </div>
+              </div>
+
+              <!-- Filter Tabs & Search -->
+              <div class="queue-filter-row">
+                <div class="filter-pills">
+                  <button class="q-filter active" onclick="filterQueue('all')">All (28)</button>
+                  <button class="q-filter" onclick="filterQueue('urgent')">🔴 Urgent</button>
+                  <button class="q-filter" onclick="filterQueue('priority')">🟡 Priority</button>
+                  <button class="q-filter" onclick="filterQueue('routine')">🟢 Routine</button>
+                </div>
+              </div>
+
+              <!-- Patients Queue Cards List -->
+              <div class="patient-queue-list" id="patientQueueContainer">
+                <!-- Patient 1: Sunita Devi (P-1042) -->
+                <div class="patient-queue-card urgent-border" onclick="openReviewModal('P-1042')">
+                  <div class="q-card-top">
+                    <div class="q-patient-info">
+                      <span class="q-badge urgent">🔴 URGENT</span>
+                      <strong class="q-name">Patient P-1042: Sunita Devi (42 F)</strong>
+                    </div>
+                    <span class="q-wait-time">⏱️ Waiting: 12 min</span>
+                  </div>
+                  <div class="q-symptoms-snippet">
+                    <strong>Symptoms:</strong> Fever with Chills • Severe Headache • Body Ache
+                  </div>
+                  <div class="q-meta-badges">
+                    <span class="q-badge-mini">📄 CBC Report Attached</span>
+                    <span class="q-badge-mini">🌡️ Temp: 102.4°F</span>
+                    <span class="q-badge-mini lang">Hindi Voice Note</span>
+                  </div>
+                  <div class="q-card-footer">
+                    <span class="q-assigned">Desk: Assigned to Sister Priya</span>
+                    <button class="btn-review-mini" onclick="event.stopPropagation(); openReviewModal('P-1042')">Review Case →</button>
+                  </div>
+                </div>
+
+                <!-- Patient 2: Rajesh Kumar (P-1043) -->
+                <div class="patient-queue-card priority-border" onclick="openReviewModal('P-1043')">
+                  <div class="q-card-top">
+                    <div class="q-patient-info">
+                      <span class="q-badge priority">🟡 PRIORITY</span>
+                      <strong class="q-name">Patient P-1043: Rajesh Kumar (35 M)</strong>
+                    </div>
+                    <span class="q-wait-time">⏱️ Waiting: 24 min</span>
+                  </div>
+                  <div class="q-symptoms-snippet">
+                    <strong>Symptoms:</strong> Persistent Cough • Low Grade Fever • Sore Throat
+                  </div>
+                  <div class="q-meta-badges">
+                    <span class="q-badge-mini">📝 Text Form</span>
+                    <span class="q-badge-mini">Duration: 3 days</span>
+                  </div>
+                  <div class="q-card-footer">
+                    <span class="q-assigned">Desk: General OPD Queue</span>
+                    <button class="btn-review-mini" onclick="event.stopPropagation(); openReviewModal('P-1043')">Review Case →</button>
+                  </div>
+                </div>
+
+                <!-- Patient 3: Amit Sharma (P-1045) -->
+                <div class="patient-queue-card urgent-border" onclick="openReviewModal('P-1045')">
+                  <div class="q-card-top">
+                    <div class="q-patient-info">
+                      <span class="q-badge urgent">🔴 URGENT</span>
+                      <strong class="q-name">Patient P-1045: Amit Sharma (58 M)</strong>
+                    </div>
+                    <span class="q-wait-time">⏱️ Waiting: 4 min</span>
+                  </div>
+                  <div class="q-symptoms-snippet">
+                    <strong>Symptoms:</strong> Acute Chest Tightness • Dyspnea • Diaphoresis
+                  </div>
+                  <div class="q-meta-badges">
+                    <span class="q-badge-mini">⚡ Red Flag Alert</span>
+                    <span class="q-badge-mini">Immediate ECG required</span>
+                  </div>
+                  <div class="q-card-footer">
+                    <span class="q-assigned">Emergency Triage Area</span>
+                    <button class="btn-review-mini" onclick="event.stopPropagation(); openReviewModal('P-1045')">Review Case →</button>
+                  </div>
+                </div>
+
+                <!-- Patient 4: Anita Behera (P-1044) -->
+                <div class="patient-queue-card routine-border" onclick="openReviewModal('P-1044')">
+                  <div class="q-card-top">
+                    <div class="q-patient-info">
+                      <span class="q-badge routine">🟢 ROUTINE</span>
+                      <strong class="q-name">Patient P-1044: Anita Behera (61 F)</strong>
+                    </div>
+                    <span class="q-wait-time">⏱️ Waiting: 45 min</span>
+                  </div>
+                  <div class="q-symptoms-snippet">
+                    <strong>Symptoms:</strong> Chronic Knee Joint Swelling & Pain (5 days)
+                  </div>
+                  <div class="q-meta-badges">
+                    <span class="q-badge-mini">Odia Audio Note</span>
+                    <span class="q-badge-mini">Ortho OPD</span>
+                  </div>
+                  <div class="q-card-footer">
+                    <span class="q-assigned">Desk: Routine Queue</span>
+                    <button class="btn-review-mini" onclick="event.stopPropagation(); openReviewModal('P-1044')">Review Case →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= SCREEN 10: HEALTHCARE WORKER CLINICAL REVIEW ================= -->
+          <section class="screen-view" id="screen-hw-review">
+            <div class="screen-header-nav">
+              <button class="back-nav-btn" onclick="goToScreen('hw-dashboard')">←</button>
+              <div class="header-center-title">
+                <span>Clinical Review: P-1042</span>
+                <span class="header-sub-id">Sister Priya • Human Verification</span>
+              </div>
+              <div class="header-right-blank"></div>
+            </div>
+
+            <div class="screen-scrollable-body">
+              <!-- AI Generated Summary Block -->
+              <div class="review-block">
+                <div class="r-badge-row">
+                  <span class="r-badge-ai">🤖 AI-GENERATED TRIAGE SUMMARY</span>
+                  <span class="r-badge-score">Calculated Urgency: <b>HIGH 🔴</b></span>
+                </div>
+
+                <div class="review-symptoms-box">
+                  <h4 class="box-subtitle">Reported Symptoms</h4>
+                  <ul class="clean-bullets">
+                    <li>• Fever with Chills (acute onset, 24 hours)</li>
+                    <li>• Severe throbbing headache, light sensitive</li>
+                    <li>• Generalized fatigue & body ache</li>
+                  </ul>
+                </div>
+
+                <div class="review-reports-box">
+                  <h4 class="box-subtitle">Uploaded Reports</h4>
+                  <div class="report-file-pill">
+                    <span>📄 Blood Report (CBC) - Attached</span>
+                    <span class="val-pill">Hb 11.2 | Platelets 2.1L | TLC 8.2k</span>
+                  </div>
+                </div>
+
+                <div class="review-missing-box">
+                  <h4 class="box-subtitle">Vitals & Missing Info Status</h4>
+                  <div class="vitals-row">
+                    <span class="v-chip ok">✓ Temp: 102.4°F verified</span>
+                    <span class="v-chip ok">✓ Meds: Paracetamol logged</span>
+                    <span class="v-chip warn">⚠️ Blood pressure not yet taken</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Human Decision Overrides -->
+              <div class="decision-card">
+                <h4 class="decision-heading">👩⚕️ Healthcare Worker Final Decision:</h4>
+                <p class="decision-sub">Human clinical judgment overrides or confirms the AI suggestion:</p>
+
+                <div class="decision-radios">
+                  <label class="radio-label-tile" onclick="setWorkerDecision('routine')">
+                    <input type="radio" name="hwDecision" value="routine">
+                    <div class="tile-content">
+                      <span class="tile-icon">🟢</span>
+                      <div>
+                        <strong>Routine</strong>
+                        <p>Stable vitals, can wait in general OPD</p>
+                      </div>
+                    </div>
+                  </label>
+
+                  <label class="radio-label-tile active" onclick="setWorkerDecision('priority')">
+                    <input type="radio" name="hwDecision" value="priority" checked>
+                    <div class="tile-content">
+                      <span class="tile-icon">🟡</span>
+                      <div>
+                        <strong>Priority</strong>
+                        <p>Needs review within 30 mins; symptomatic relief</p>
+                      </div>
+                    </div>
+                  </label>
+
+                  <label class="radio-label-tile" onclick="setWorkerDecision('urgent')">
+                    <input type="radio" name="hwDecision" value="urgent">
+                    <div class="tile-content">
+                      <span class="tile-icon">🔴</span>
+                      <div>
+                        <strong>Urgent</strong>
+                        <p>Immediate medical officer attention; possible red flag</p>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+
+                <!-- Add Notes -->
+                <div class="notes-area">
+                  <label class="form-label-small">Sister Priya's Clinical Notes:</label>
+                  <textarea id="nurseNotes" class="custom-textarea" rows="2" placeholder="Add nurse observation...">Patient looks visibly flushed and fatigued. Shivering noted. Advised oral fluids, SpO2 98%, referred to Dr. Ananya Roy for acute febrile workup.</textarea>
+                  
+                  <div class="quick-template-chips">
+                    <button class="qt-chip" onclick="appendNote('BP: 118/76 mmHg. SpO2: 98%. ')">+ Vitals Normal</button>
+                    <button class="qt-chip" onclick="appendNote('Ordered rapid malaria & NS1 antigen kit. ')">+ Order Rapid Kit</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Decision Action Buttons -->
+              <div class="review-actions-bottom">
+                <button class="btn-primary-gradient" onclick="goToScreen('referral-prep')">
+                  <span>Refer to Doctor / Specialist →</span>
+                </button>
+                <button class="btn-secondary-outline" onclick="completeRoutineQueue()">
+                  Send to General OPD Consultation
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= SCREEN 11: REFERRAL PREPARATION ================= -->
+          <section class="screen-view" id="screen-referral-prep">
+            <div class="screen-header-nav">
+              <button class="back-nav-btn" onclick="goToScreen('hw-review')">←</button>
+              <div class="header-center-title">Referral Preparation</div>
+              <div class="header-right-blank"></div>
+            </div>
+
+            <div class="screen-scrollable-body">
+              <div class="referral-patient-banner">
+                <div class="r-badge">REFERRAL HANDOVER</div>
+                <h3 class="r-name">Patient: Sunita Devi (P-1042)</h3>
+                <p class="r-details">Age: 42 • Gender: Female • Facility: Sharda PHC Navrangpura</p>
+              </div>
+
+              <!-- Reason for Referral -->
+              <div class="form-group-card">
+                <label class="form-label-bold">Reason for Referral:</label>
+                <textarea id="referralReason" class="custom-textarea" rows="3">Acute febrile illness with persistent throbbing cephalea and fever (102.4°F). CBC shows normal platelets (2.1L) but patient requires duty doctor evaluation for vector-borne screening (Dengue/Malaria) and prescription of antipyretics.</textarea>
+              </div>
+
+              <!-- Attachments Checklist -->
+              <div class="form-group-card">
+                <label class="form-label-bold">Attached Clinical Artifacts:</label>
+                <div class="attachments-list">
+                  <label class="att-item">
+                    <input type="checkbox" checked disabled>
+                    <span class="att-name">✓ Blood Report (CBC_1042_0925.pdf)</span>
+                  </label>
+                  <label class="att-item">
+                    <input type="checkbox" checked disabled>
+                    <span class="att-name">✓ ELARA AI Triage Summary & Urgency Score</span>
+                  </label>
+                  <label class="att-item">
+                    <input type="checkbox" checked disabled>
+                    <span class="att-name">✓ Patient Hindi Voice Note & English STT Transcript</span>
+                  </label>
+                  <label class="att-item">
+                    <input type="checkbox" checked>
+                    <span class="att-name">✓ Vitals Sheet (Temp: 102.4°F, SpO2: 98%)</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Refer To Selector -->
+              <div class="form-group-card">
+                <label class="form-label-bold">Refer to Specialist / Department:</label>
+                <select id="referralDept" class="custom-select">
+                  <option value="gp" selected>👨⚕️ General Physician (Duty MO: Dr. Ananya Roy - Room 104)</option>
+                  <option value="internal">🩺 Internal Medicine Specialist (District Hospital)</option>
+                  <option value="infectious">🦟 Infectious Disease / Fever Clinic</option>
+                  <option value="emergency">🚨 Emergency Resuscitation Unit</option>
+                </select>
+              </div>
+
+              <!-- Send Referral CTA -->
+              <div class="referral-actions">
+                <button class="btn-primary-gradient" onclick="sendReferralNow()">
+                  <span>Send Referral 📨</span>
+                </button>
+                <div class="referral-note">
+                  Generates ABDM compliant digital token #REF-8821 with SMS alert to patient.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= SCREEN 12: FACILITY ADMIN DASHBOARD ================= -->
+          <section class="screen-view" id="screen-facility-admin">
+            <div class="admin-topbar">
+              <div>
+                <span class="badge-role-admin">🏥 FACILITY INCHARGE CONSOLE</span>
+                <h3 class="admin-heading">Sharda PHC Analytics</h3>
+                <span class="admin-sub">Dr. Ananya Roy • Medical Officer Incharge</span>
+              </div>
+              <button class="btn-export-reports" onclick="exportFacilityReport()">📊 Export</button>
+            </div>
+
+            <div class="screen-scrollable-body">
+              <!-- KPI Cards -->
+              <div class="kpi-grid">
+                <div class="kpi-card total">
+                  <span class="kpi-title">Today's Cases</span>
+                  <span class="kpi-value" id="kpiTotalCases">128</span>
+                  <span class="kpi-sub">+18% vs yesterday</span>
+                </div>
+                <div class="kpi-card avg-time">
+                  <span class="kpi-title">Avg Review Time</span>
+                  <span class="kpi-value" id="kpiAvgTime">8 min</span>
+                  <span class="kpi-sub">Target: &lt; 10 min ⚡</span>
+                </div>
+              </div>
+
+              <!-- Triage Urgency Distribution -->
+              <div class="analytics-card">
+                <div class="card-header-flex">
+                  <h4 class="card-title">Triage Urgency Breakdown</h4>
+                  <span class="badge-active-cases">128 Total</span>
+                </div>
+
+                <div class="breakdown-bars">
+                  <div class="bar-group">
+                    <div class="bar-labels">
+                      <span>🔴 Urgent</span>
+                      <b>12 cases (9.4%)</b>
+                    </div>
+                    <div class="progress-track">
+                      <div class="progress-fill urgent-fill" style="width: 9.4%;"></div>
+                    </div>
+                  </div>
+
+                  <div class="bar-group">
+                    <div class="bar-labels">
+                      <span>🟡 Priority</span>
+                      <b>36 cases (28.1%)</b>
+                    </div>
+                    <div class="progress-track">
+                      <div class="progress-fill priority-fill" style="width: 28.1%;"></div>
+                    </div>
+                  </div>
+
+                  <div class="bar-group">
+                    <div class="bar-labels">
+                      <span>🟢 Routine</span>
+                      <b>80 cases (62.5%)</b>
+                    </div>
+                    <div class="progress-track">
+                      <div class="progress-fill routine-fill" style="width: 62.5%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Languages Distribution (CRITICAL REQUIREMENT) -->
+              <div class="analytics-card">
+                <h4 class="card-title">Languages Used in Triage Intake</h4>
+                <div class="lang-donut-row">
+                  <div class="lang-metric">
+                    <span class="lm-color hindi-color"></span>
+                    <div class="lm-details">
+                      <strong class="lm-percent">52%</strong>
+                      <span class="lm-name">Hindi (हिन्दी)</span>
+                    </div>
+                  </div>
+                  <div class="lang-metric">
+                    <span class="lm-color english-color"></span>
+                    <div class="lm-details">
+                      <strong class="lm-percent">31%</strong>
+                      <span class="lm-name">English</span>
+                    </div>
+                  </div>
+                  <div class="lang-metric">
+                    <span class="lm-color odia-color"></span>
+                    <div class="lm-details">
+                      <strong class="lm-percent">17%</strong>
+                      <span class="lm-name">Odia (ଓଡ଼ିଆ)</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="lang-stacked-bar">
+                  <div class="seg hindi" style="width: 52%;" title="Hindi 52%"></div>
+                  <div class="seg english" style="width: 31%;" title="English 31%"></div>
+                  <div class="seg odia" style="width: 17%;" title="Odia 17%"></div>
+                </div>
+              </div>
+
+              <!-- AI Accuracy & Human-in-the-Loop Alignment -->
+              <div class="analytics-card">
+                <div class="card-header-flex">
+                  <h4 class="card-title">AI & Clinician Alignment</h4>
+                  <span class="pill-align-rate">91.8% Agreement</span>
+                </div>
+                <p class="alignment-desc">In 117 of 128 cases, healthcare workers validated the AI priority classification directly without overrides.</p>
+                <div class="audit-summary-row">
+                  <span class="audit-stat"><b>11</b> Clinician Overrides</span>
+                  <span class="audit-stat"><b>0</b> Critical Misses</span>
+                  <span class="audit-stat"><b>100%</b> Audit Logged</span>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="admin-actions-row">
+                <button class="btn-primary-gradient" onclick="goToScreen('hw-dashboard')">
+                  <span>View Live Queue (28)</span>
+                </button>
+                <button class="btn-secondary-outline" onclick="openAuditModal()">
+                  View ABDM Audit Log
+                </button>
+              </div>
+            </div>
+          </section>
+
+        </div><!-- /phone-screen-content -->
+
+        <!-- Phone Home Indicator Bar -->
+        <div class="phone-home-indicator"></div>
+      </div><!-- /smartphone-frame -->
+    </div><!-- /mobile-device-wrapper -->
+
+
+    <!-- 2. FIGMA STORYBOARD VIEW CONTAINER (Displays all screens side-by-side like the Figma screenshot) -->
+    <div class="storyboard-canvas-wrapper" id="storyboardCanvasWrapper">
+      <div class="storyboard-header-bar">
+        <div class="sb-title">
+          <h3>Figma Workflow Storyboard</h3>
+          <p>Interactive overview of all screens in the ELARA triage flow</p>
+        </div>
+        <div class="sb-controls">
+          <button class="sb-zoom-btn" onclick="zoomStoryboard(0.1)">Zoom +</button>
+          <button class="sb-zoom-btn" onclick="zoomStoryboard(-0.1)">Zoom -</button>
+          <button class="sb-zoom-btn" onclick="resetStoryboardZoom()">Reset (100%)</button>
+        </div>
+      </div>
+
+      <div class="storyboard-grid" id="storyboardGrid">
+        <!-- Screen cards will be mirrored / loaded here -->
+        <div class="board-frame" onclick="openScreenFromBoard('splash')">
+          <div class="frame-tag">1. Splash & Welcome</div>
+          <div class="frame-preview-box" id="sb-preview-splash"></div>
+        </div>
+
+        <div class="board-frame" onclick="openScreenFromBoard('role-select')">
+          <div class="frame-tag">2. Role Selection & Privacy</div>
+          <div class="frame-preview-box" id="sb-preview-role-select"></div>
+        </div>
+
+        <div class="board-frame" onclick="openScreenFromBoard('patient-home')">
+          <div class="frame-tag">3. Patient Home & Banner</div>
+          <div class="frame-preview-box" id="sb-preview-patient-home"></div>
+        </div>
+
+        <div class="board-frame" onclick="openScreenFromBoard('multimodal-input')">
+          <div class="frame-tag">4. Multimodal Input (Voice/OCR)</div>
+          <div class="frame-preview-box" id="sb-preview-multimodal-input"></div>
+        </div>
+
+        <div class="board-frame" onclick="openScreenFromBoard('ai-processing')">
+          <div class="frame-tag">5. AI Processing Pipeline</div>
+          <div class="frame-preview-box" id="sb-preview-ai-processing"></div>
+        </div>
+
+        <div class="board-frame" onclick="openScreenFromBoard('symptom-summary')">
+          <div class="frame-tag">6. Missing Info Resolution</div>
+          <div class="frame-preview-box" id="sb-preview-symptom-summary"></div>
+        </div>
+
+        <div class="board-frame" onclick="openScreenFromBoard('triage-summary')">
+          <div class="frame-tag">7. Triage Result Note</div>
+          <div class="frame-preview-box" id="sb-preview-triage-summary"></div>
+        </div>
+
+        <div class="board-frame" onclick="openScreenFromBoard('hw-dashboard')">
+          <div class="frame-tag">8. Healthcare Worker Queue</div>
+          <div class="frame-preview-box" id="sb-preview-hw-dashboard"></div>
+        </div>
+
+        <div class="board-frame" onclick="openScreenFromBoard('hw-review')">
+          <div class="frame-tag">9. Nurse Decision Review</div>
+          <div class="frame-preview-box" id="sb-preview-hw-review"></div>
+        </div>
+
+        <div class="board-frame" onclick="openScreenFromBoard('referral-prep')">
+          <div class="frame-tag">10. Referral Preparation</div>
+          <div class="frame-preview-box" id="sb-preview-referral-prep"></div>
+        </div>
+
+        <div class="board-frame" onclick="openScreenFromBoard('facility-admin')">
+          <div class="frame-tag">11. Facility Admin Dashboard</div>
+          <div class="frame-preview-box" id="sb-preview-facility-admin"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. WORKSTATION DUAL VIEW CONTAINER (Desktop Split view for Clinical Staff) -->
+    <div class="workstation-dual-wrapper" id="workstationDualWrapper">
+      <div class="ws-pane ws-pane-left">
+        <div class="ws-pane-header">
+          <span class="badge-role-hw">CLINICAL TRIAGE QUEUE (28 PATIENTS)</span>
+          <h4>Sister Priya's Desk</h4>
+        </div>
+        <div class="ws-pane-body" id="wsQueueSlot">
+          <!-- Mirrored queue elements -->
+        </div>
+      </div>
+      <div class="ws-pane ws-pane-right">
+        <div class="ws-pane-header">
+          <span class="badge-role-admin">ACTIVE CASE CLINICAL INSPECTOR</span>
+          <h4 id="wsActiveCaseTitle">Patient P-1042: Sunita Devi (42 F)</h4>
+        </div>
+        <div class="ws-pane-body" id="wsDetailSlot">
+          <!-- Mirrored detail & referral elements -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ARCHITECTURE & PIPELINE DRAWER MODAL -->
+  <div class="modal-backdrop" id="archModal" onclick="closeArchDrawer(event)">
+    <div class="arch-drawer-content" onclick="event.stopPropagation()">
+      <div class="drawer-header">
+        <div>
+          <h3>ELARA Clinical AI & Data Architecture</h3>
+          <p>End-to-end multimodal pipeline from patient voice to doctor referral</p>
+        </div>
+        <button class="drawer-close-btn" onclick="closeArchDrawer()">&times;</button>
+      </div>
+
+      <div class="drawer-body">
+        <div class="arch-diagram-card">
+          <h4 class="arch-section-title">1. Patient Journey & Human Review Loop</h4>
+          <div class="arch-flow-diagram">
+            <div class="flow-node">👤 Patient Intake</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-node">Basic Information & Consent</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-node highlight">Text / 🎤 Voice / 📷 Lab Report</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-node">AI Extracts Symptoms & Vitals</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-node alert">⚠️ Missing Information Identified</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-node">Structured Triage Note & Urgency Matrix</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-node human">👩⚕️ HUMAN HEALTHCARE WORKER REVIEW</div>
+            <div class="flow-branch">
+              <div class="branch-col">
+                <span class="branch-arrow">↙</span>
+                <span class="branch-lbl">Routine</span>
+                <div class="flow-subnode">General OPD Consultation</div>
+              </div>
+              <div class="branch-col">
+                <span class="branch-arrow">↘</span>
+                <span class="branch-lbl">Referral</span>
+                <div class="flow-subnode highlight-blue">Specialist / Doctor Handover</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-diagram-card">
+          <h4 class="arch-section-title">2. Voice AI & Clinical Triage Engine Architecture</h4>
+          <div class="tech-pipeline-diagram">
+            <div class="tp-box">
+              <span class="tp-icon">🎤</span>
+              <strong>Patient Voice</strong>
+              <small>Hindi / Odia / English</small>
+            </div>
+            <div class="tp-arr">→</div>
+            <div class="tp-box">
+              <span class="tp-icon">🗣️</span>
+              <strong>Speech-to-Text</strong>
+              <small>Whisper / Vani STT</small>
+            </div>
+            <div class="tp-arr">→</div>
+            <div class="tp-box">
+              <span class="tp-icon">🌐</span>
+              <strong>Clinical Translation</strong>
+              <small>IndicTrans2 Engine</small>
+            </div>
+            <div class="tp-arr">→</div>
+            <div class="tp-box highlight">
+              <span class="tp-icon">🧠</span>
+              <strong>Triage Engine</strong>
+              <small>Symptoms • Duration • Red Flags • Missing Vitals</small>
+            </div>
+            <div class="tp-arr">→</div>
+            <div class="tp-box human">
+              <span class="tp-icon">👩⚕️</span>
+              <strong>Sister Priya (Nurse)</strong>
+              <small>Human Overrides & Doctor Handover</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-diagram-card">
+          <h4 class="arch-section-title">3. Compliance, Ethics & Safety Standards</h4>
+          <div class="compliance-bullets">
+            <div class="c-bullet">
+              <strong>ABDM Milestone 3 Compliant:</strong> Integrates with ABHA Health ID, HIP/HIU consent manager, and FHIR clinical note schemas.
+            </div>
+            <div class="c-bullet">
+              <strong>Clinical Decision Support Disclaimer:</strong> In compliance with Indian CDSCO & FDA SaMD guidelines, ELARA acts strictly as a clinical decision support tool for triage urgency sorting, not diagnostic therapeutics.
+            </div>
+            <div class="c-bullet">
+              <strong>Zero Data Selling:</strong> Patient audio and reports are processed in zero-retention memory with encrypted audit logs.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP TOAST NOTIFICATION -->
+  <div class="toast-notification" id="toastNotification">
+    <span class="toast-icon" id="toastIcon">✨</span>
+    <span class="toast-message" id="toastMsg">Action completed successfully</span>
+  </div>
+
+  <!-- SCRIPT FILES -->
+  <script src="js/data.js"></script>
+  <script src="js/audio-sim.js"></script>
+  <script src="js/triage-engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
