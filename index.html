@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ELARA 2.0 | Multimodal AI Healthcare Triage Assistant (SehatSaarthi)</title>
-  <meta name="description" content="ELARA SehatSaarthi is a clinical web application providing intelligent multimodal healthcare triage support across Voice, Text, and Medical Reports in English, Hindi, and Odia.">
+  <title>ELARA 2.0 | Multimodal AI Healthcare Triage Assistant</title>
+  <meta name="description" content="ELARA 2.0 is a clinical web application providing intelligent multimodal healthcare triage support across Voice, Text, and Medical Reports in English, Hindi, and Odia.">
   
   <!-- Typography & Icons from Stitch Design System -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -65,67 +65,102 @@
 <body class="theme-light bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col">
   
   <!-- ================= TOP GLOBAL WEBSITE HEADER ================= -->
-  <header class="app-topbar bg-white/95 backdrop-blur-xl border-b border-slate-200/80 sticky top-0 z-50 px-4 lg:px-8 py-3 flex items-center justify-between shadow-xs">
-    <div class="topbar-left flex items-center gap-3 sm:gap-4">
-      <div class="brand-pill flex items-center gap-3 cursor-pointer" onclick="goToScreen('splash')">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-700 via-teal-600 to-teal-500 flex items-center justify-center shadow-md p-2">
-          <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <header class="app-topbar bg-white/95 backdrop-blur-xl border-b border-slate-200/80 sticky top-0 z-50 px-3 lg:px-8 py-2.5 flex items-center justify-between shadow-xs">
+    <!-- Topbar Left: Universal Back, Menu Trigger & Brand Pill -->
+    <div class="topbar-left flex items-center gap-2.5">
+      <!-- Universal Back Button (Auto-hidden on splash, visible on inner screens) -->
+      <button class="hidden items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs shadow-xs transition-all cursor-pointer" id="globalBackBtn" onclick="window.goBack()" title="Back to previous screen">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        <span class="hidden sm:inline" data-i18n="back">Back</span>
+      </button>
+
+      <!-- Left Upper Corner Menu Button -->
+      <button class="menu-bar-btn flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-800 hover:bg-teal-700 text-white font-bold text-xs shadow-sm transition-all cursor-pointer" onclick="toggleLeftMenu()" id="menuToggleBtn" title="Open Main Navigation Menu">
+        <span class="material-symbols-outlined text-[19px]">menu</span>
+        <span class="tracking-wide" data-i18n="menu">Menu</span>
+      </button>
+
+      <!-- Brand Pill -->
+      <div class="brand-pill flex items-center gap-2.5 cursor-pointer" onclick="goToScreen('splash')">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-teal-700 via-teal-600 to-teal-500 flex items-center justify-center shadow-md p-2">
+          <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="#ffffff" />
           </svg>
         </div>
         <div class="flex flex-col">
-          <span class="font-display font-extrabold text-xl text-slate-900 leading-tight flex items-center gap-1.5">
-            ELARA <span class="bg-teal-700 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">v2.4 Web</span>
+          <span class="font-display font-extrabold text-base sm:text-lg text-slate-900 leading-tight flex items-center gap-1.5">
+            ELARA <span class="bg-teal-700 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">v2.4 Web</span>
           </span>
-          <span class="text-xs font-semibold text-teal-800 tracking-wide uppercase">SehatSaarthi • सेहत सारथी</span>
+          <span class="text-[10px] sm:text-[11px] font-semibold text-teal-800 tracking-wide uppercase">Multimodal Clinical Triage</span>
         </div>
       </div>
-
-      <div class="hidden md:flex items-center gap-2 bg-teal-50 border border-teal-200/80 px-3.5 py-1.5 rounded-full text-xs">
-        <span class="w-2.5 h-2.5 rounded-full bg-teal-600 animate-pulse"></span>
-        <span class="font-semibold text-teal-950">Ayushman Bharat (ABDM) Integrated</span>
-        <span class="bg-teal-200/80 text-teal-900 text-[10px] font-bold px-1.5 py-0.2 rounded">Kendrapara PHC</span>
-      </div>
     </div>
 
-    <!-- Center View Mode Selector (Website Mode | Figma Storyboard | Dual Workstation) -->
-    <div class="topbar-center hidden lg:flex">
-      <div class="view-mode-selector bg-slate-100 p-1 rounded-full border border-slate-200 flex items-center gap-1" id="viewModeSelector">
-        <button class="view-tab active px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 text-slate-700 transition-all" data-mode="mobile" onclick="setViewMode('mobile')">
-          <span class="material-symbols-outlined text-[16px]">web</span>
-          <span>Web App Portal</span>
-        </button>
-        <button class="view-tab px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 text-slate-700 transition-all" data-mode="storyboard" onclick="setViewMode('storyboard')">
-          <span class="material-symbols-outlined text-[16px]">dashboard_customize</span>
-          <span>Figma Flow Board (All Screens)</span>
-        </button>
-        <button class="view-tab px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 text-slate-700 transition-all" data-mode="workstation" onclick="setViewMode('workstation')">
-          <span class="material-symbols-outlined text-[16px]">desktop_windows</span>
-          <span>Dual Workstation</span>
-        </button>
-      </div>
-    </div>
+    <!-- Topbar Center / Right: Quick Actions (Search, SOS, Cart, 23 Languages) -->
+    <div class="topbar-right flex items-center gap-2 sm:gap-2.5">
+      <!-- Universal Search Shortcut -->
+      <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-teal-50 border border-slate-200/80 text-slate-700 text-xs font-semibold transition-colors cursor-pointer" onclick="goToScreen('search')" title="Search medicines, symptoms, clinics">
+        <span class="material-symbols-outlined text-[17px] text-teal-700">search</span>
+        <span class="hidden md:inline" data-i18n="search">Search</span>
+      </button>
 
-    <!-- Right Controls: Language, Role Switcher, Pipeline & Theme -->
-    <div class="topbar-right flex items-center gap-2.5">
-      <div class="lang-selector-group bg-slate-100 p-0.5 rounded-full border border-slate-200 flex items-center">
-        <button class="lang-btn active px-3 py-1 text-xs font-bold rounded-full transition-all" data-lang="en" onclick="setLanguage('en')">English</button>
-        <button class="lang-btn px-2.5 py-1 text-xs font-bold rounded-full transition-all" data-lang="hi" onclick="setLanguage('hi')">हिंदी</button>
-        <button class="lang-btn px-2.5 py-1 text-xs font-bold rounded-full transition-all" data-lang="od" onclick="setLanguage('od')">ଓଡ଼ିଆ</button>
-      </div>
+      <!-- Emergency 108 SOS Pill -->
+      <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold shadow-sm animate-pulse cursor-pointer" onclick="goToScreen('emergency')" title="Emergency 108 Ambulance SOS">
+        <span class="material-symbols-outlined text-[17px]">emergency</span>
+        <span class="hidden xs:inline">SOS 108</span>
+      </button>
 
-      <div class="role-quick-nav hidden sm:flex items-center gap-1.5 text-xs font-semibold text-slate-600">
-        <select id="topRoleSelector" onchange="switchUserRole(this.value)" class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-800 cursor-pointer outline-none">
-          <option value="patient">👤 Patient (Sunita Devi)</option>
-          <option value="nurse">👩⚕️ Healthcare Worker (Sister Priya)</option>
-          <option value="admin">🏥 Facility Admin (Dr. Ananya Roy)</option>
+      <!-- Jan Aushadhi Pharmacy Cart with Count Badge -->
+      <button class="relative flex items-center justify-center p-2 rounded-xl bg-teal-50 border border-teal-200 hover:bg-teal-100 text-teal-900 transition-colors cursor-pointer" onclick="window.ElaraPharmacy.renderCartModal()" title="View Jan Aushadhi Pharmacy Cart">
+        <span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+        <span class="cart-count-badge absolute -top-1.5 -right-1.5 bg-teal-800 text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-xs">2</span>
+      </button>
+
+      <!-- Multi-Language Selector Dropdown (23 Indian Languages) -->
+      <div class="flex items-center gap-1 bg-white border border-slate-200 rounded-xl px-2 py-1 shadow-2xs">
+        <span class="material-symbols-outlined text-[17px] text-teal-700">translate</span>
+        <select id="globalLangSelector" onchange="setLanguage(this.value)" class="elara-lang-select bg-transparent text-xs font-bold text-slate-800 cursor-pointer outline-none max-w-[90px] sm:max-w-none">
+          <option value="en">🇬🇧 English</option>
+          <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+          <option value="od">🇮🇳 ଓଡ଼ିଆ (Odia)</option>
+          <option value="bn">🇮🇳 বাংলা (Bengali)</option>
+          <option value="as">🇮🇳 অসমীয়া (Assamese)</option>
+          <option value="gu">🇮🇳 ગુજરાતી (Gujarati)</option>
+          <option value="kn">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+          <option value="ml">🇮🇳 മലയാളം (Malayalam)</option>
+          <option value="mr">🇮🇳 मराठी (Marathi)</option>
+          <option value="pa">🇮🇳 ਪੰਜਾਬੀ (Punjabi)</option>
+          <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+          <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+          <option value="ur">🇮🇳 اردو (Urdu)</option>
+          <option value="sa">🇮🇳 संस्कृतम् (Sanskrit)</option>
+          <option value="kok">🇮🇳 कोंकणी (Konkani)</option>
+          <option value="mai">🇮🇳 मैथिली (Maithili)</option>
+          <option value="mni">🇮🇳 মৈতৈলোন্ (Manipuri)</option>
+          <option value="ne">🇳🇵 नेपाली (Nepali)</option>
+          <option value="sd">🇮🇳 سنڌي (Sindhi)</option>
+          <option value="ks">🇮🇳 کٲشُر (Kashmiri)</option>
+          <option value="doi">🇮🇳 डोगरी (Dogri)</option>
+          <option value="brx">🇮🇳 बर' (Bodo)</option>
+          <option value="sat">🇮🇳 ᱥᱟᱱᱛᱟᱲᱤ (Santali)</option>
         </select>
       </div>
 
-      <button class="icon-btn-header bg-white border border-slate-200 hover:bg-teal-50 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-teal-900 transition-colors flex items-center gap-1 cursor-pointer" onclick="openArchDrawer()" title="View System Architecture & Clinical Pipeline">
-        <span class="material-symbols-outlined text-[18px] text-teal-700">architecture</span>
-        <span class="hidden sm:inline">Pipeline</span>
-      </button>
+      <!-- ABDM Clinic Tag -->
+      <div class="hidden xl:flex items-center gap-2 bg-teal-50 border border-teal-200/80 px-3 py-1.5 rounded-full text-xs">
+        <span class="w-2 h-2 rounded-full bg-teal-600 animate-pulse"></span>
+        <span class="font-semibold text-teal-950">ABDM Integrated</span>
+      </div>
+
+      <!-- Role Selector -->
+      <div class="role-quick-nav hidden sm:flex items-center gap-1.5 text-xs font-semibold text-slate-600">
+        <select id="topRoleSelector" onchange="switchUserRole(this.value)" class="bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-800 cursor-pointer outline-none">
+          <option value="patient">👤 Patient (Sunita Devi)</option>
+          <option value="nurse">👩⚕️ Staff Nurse (Sister Priya)</option>
+          <option value="admin">🏥 Facility Admin (Dr. Roy)</option>
+        </select>
+      </div>
+
 
       <button class="icon-btn-header bg-white border border-slate-200 hover:bg-slate-100 p-2 rounded-lg text-slate-700 cursor-pointer" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
         <span class="material-symbols-outlined text-[18px]">contrast</span>
@@ -133,31 +168,335 @@
     </div>
   </header>
 
-  <!-- Interactive Flow Steps Bar -->
-  <div class="flow-step-bar bg-white border-b border-slate-200/80 px-4 lg:px-8 py-2 flex items-center justify-between overflow-x-auto gap-4" id="flowStepBar">
-    <div class="flow-steps-inner flex items-center gap-2 whitespace-nowrap text-xs">
-      <span class="font-bold text-slate-400 uppercase tracking-wider text-[11px] mr-1">Triage Modules:</span>
-      <button class="step-chip active" onclick="goToScreen('splash')">1. Home / Splash</button>
-      <button class="step-chip" onclick="goToScreen('role-select')">2. Role Portal</button>
-      <button class="step-chip" onclick="goToScreen('consent')">3. Privacy Consent</button>
-      <button class="step-chip" onclick="goToScreen('patient-home')">4. Patient Dashboard</button>
-      <button class="step-chip" onclick="goToScreen('multimodal-input')">5. Multimodal Studio</button>
-      <button class="step-chip" onclick="goToScreen('ai-processing')">6. AI Pipeline</button>
-      <button class="step-chip" onclick="goToScreen('symptom-summary')">7. Missing Info</button>
-      <button class="step-chip" onclick="goToScreen('triage-summary')">8. Triage Note</button>
-      <button class="step-chip" onclick="goToScreen('hw-dashboard')">9. Nurse Queue</button>
-      <button class="step-chip" onclick="goToScreen('hw-review')">10. Clinical Review</button>
-      <button class="step-chip" onclick="goToScreen('referral-prep')">11. Referral Handover</button>
-      <button class="step-chip" onclick="goToScreen('facility-admin')">12. Facility Admin</button>
+
+  <!-- ================= LEFT UPPER CORNER SLIDE-OUT MENU DRAWER ================= -->
+  <div id="leftMenuBackdrop" class="left-menu-backdrop" onclick="closeLeftMenu()"></div>
+  <aside id="leftSideMenuDrawer" class="left-side-menu-drawer" aria-label="Main Navigation Menu">
+    <!-- Drawer Top Header -->
+    <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/70 dark:bg-slate-900/70">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-teal-700 flex items-center justify-center text-white shadow-sm p-1.5">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="#ffffff" />
+          </svg>
+        </div>
+        <div>
+          <div class="font-display font-extrabold text-base text-slate-900 dark:text-white leading-tight">ELARA 2.0 Menu</div>
+          <div class="text-[10px] font-semibold text-teal-700 dark:text-teal-400 uppercase tracking-wider">Clinical Triage Navigation</div>
+        </div>
+      </div>
+      <button onclick="closeLeftMenu()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors cursor-pointer" title="Close Menu">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
     </div>
-    <div class="flow-stats-quick flex items-center gap-3 text-xs whitespace-nowrap">
-      <span class="flex items-center gap-1.5 text-slate-600 font-medium">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> PHC Queue: <b class="text-slate-900">28</b> cases
-      </span>
-      <span class="bg-red-50 text-red-700 border border-red-200 px-2.5 py-0.5 rounded-full font-bold">🔴 3 Urgent</span>
-      <span class="bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full font-bold">🟡 8 Priority</span>
+
+    <div class="p-4 overflow-y-auto flex flex-col gap-5 flex-1">
+      <!-- LIVE CLINICAL STATION TELEMETRY (INSIDE MENU) -->
+      <div class="bg-gradient-to-br from-teal-900 via-teal-800 to-slate-900 text-white rounded-2xl p-4 shadow-md relative overflow-hidden">
+        <div class="absolute -right-6 -top-6 w-28 h-28 bg-teal-400/10 rounded-full blur-xl pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-[10px] font-bold tracking-wider uppercase text-teal-200">LIVE CLINICAL STATION</span>
+          </div>
+          <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-white/90 font-medium">PHC-04</span>
+        </div>
+        <div class="font-bold text-sm text-white mb-0.5">Dhenkanal Sub-District Health Centre</div>
+        <div class="text-[11px] text-teal-100/80 mb-3">Primary Health Unit • MO on Duty: Dr. Ananya Roy</div>
+        <div class="grid grid-cols-3 gap-2 text-center mb-3">
+          <div class="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
+            <div class="text-red-300 font-black text-lg">3</div>
+            <div class="text-[9px] uppercase font-bold text-red-200 mt-0.5">Urgent 🔴</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
+            <div class="text-amber-300 font-black text-lg">8</div>
+            <div class="text-[9px] uppercase font-bold text-amber-200 mt-0.5">Priority 🟡</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
+            <div class="text-emerald-300 font-black text-lg">17</div>
+            <div class="text-[9px] uppercase font-bold text-emerald-200 mt-0.5">Routine 🟢</div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-teal-100/80 pt-2 border-t border-white/10">
+          <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-teal-300">timer</span> Avg Turnaround: <b>2.8 mins</b></span>
+          <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-teal-300">groups</span> Total: <b>28 Patients</b></span>
+        </div>
+      </div>
+
+      <!-- MAIN QUICK MENU SHORTCUTS: DASHBOARD | WORK STATION | TRANSLATOR -->
+      <div>
+        <div class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Main Menu Shortcuts</div>
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="goToScreen('facility-admin'); switchUserRole('admin'); closeLeftMenu();" class="p-2.5 rounded-xl border border-teal-200 dark:border-teal-800/60 bg-teal-50/80 dark:bg-teal-900/30 hover:bg-teal-100 dark:hover:bg-teal-900/50 text-teal-950 dark:text-teal-200 flex flex-col items-center justify-center gap-1 transition-all cursor-pointer shadow-xs">
+            <span class="material-symbols-outlined text-[22px] text-teal-700 dark:text-teal-400">dashboard</span>
+            <span class="text-xs font-extrabold">Dashboard</span>
+          </button>
+          <button onclick="setViewMode('workstation'); closeLeftMenu();" class="p-2.5 rounded-xl border border-teal-200 dark:border-teal-800/60 bg-teal-50/80 dark:bg-teal-900/30 hover:bg-teal-100 dark:hover:bg-teal-900/50 text-teal-950 dark:text-teal-200 flex flex-col items-center justify-center gap-1 transition-all cursor-pointer shadow-xs">
+            <span class="material-symbols-outlined text-[22px] text-teal-700 dark:text-teal-400">desktop_windows</span>
+            <span class="text-xs font-extrabold">Work Station</span>
+          </button>
+          <button onclick="document.getElementById('drawerTranslatorSection')?.scrollIntoView({behavior:'smooth'});" class="p-2.5 rounded-xl border border-teal-200 dark:border-teal-800/60 bg-teal-50/80 dark:bg-teal-900/30 hover:bg-teal-100 dark:hover:bg-teal-900/50 text-teal-950 dark:text-teal-200 flex flex-col items-center justify-center gap-1 transition-all cursor-pointer shadow-xs">
+            <span class="material-symbols-outlined text-[22px] text-teal-700 dark:text-teal-400">translate</span>
+            <span class="text-xs font-extrabold">Translator</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION 1: TRANSLATOR / ALL 23 INDIAN LANGUAGES -->
+      <div id="drawerTranslatorSection" class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/80 dark:border-slate-700">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-bold text-teal-800 dark:text-teal-300 uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">translate</span>
+            <span data-i18n="translator">Translator (23 Languages)</span>
+          </span>
+          <span class="text-[10px] text-slate-500 font-semibold" id="menuCurrentLangBadge">English</span>
+        </div>
+
+        <!-- 23-Language Quick Dropdown -->
+        <select onchange="setLanguage(this.value)" class="elara-lang-select w-full p-2.5 rounded-xl border border-teal-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs font-bold text-slate-800 dark:text-white mb-2 shadow-2xs cursor-pointer">
+          <option value="en">🇬🇧 English</option>
+          <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+          <option value="od">🇮🇳 ଓଡ଼ିଆ (Odia)</option>
+          <option value="bn">🇮🇳 বাংলা (Bengali)</option>
+          <option value="as">🇮🇳 অসমীয়া (Assamese)</option>
+          <option value="gu">🇮🇳 ગુજરાતી (Gujarati)</option>
+          <option value="kn">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+          <option value="ml">🇮🇳 മലയാളം (Malayalam)</option>
+          <option value="mr">🇮🇳 मराठी (Marathi)</option>
+          <option value="pa">🇮🇳 ਪੰਜਾਬੀ (Punjabi)</option>
+          <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+          <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+          <option value="ur">🇮🇳 اردو (Urdu)</option>
+          <option value="sa">🇮🇳 संस्कृतम् (Sanskrit)</option>
+          <option value="kok">🇮🇳 कोंकणी (Konkani)</option>
+          <option value="mai">🇮🇳 मैथिली (Maithili)</option>
+          <option value="mni">🇮🇳 মৈতৈলোন্ (Manipuri)</option>
+          <option value="ne">🇳🇵 नेपाली (Nepali)</option>
+          <option value="sd">🇮🇳 سنڌي (Sindhi)</option>
+          <option value="ks">🇮🇳 کٲشُر (Kashmiri)</option>
+          <option value="doi">🇮🇳 डोगरी (Dogri)</option>
+          <option value="brx">🇮🇳 बर' (Bodo)</option>
+          <option value="sat">🇮🇳 ᱥᱟᱱᱛᱟᱲᱤ (Santali)</option>
+        </select>
+
+        <!-- Fast Dialect Chips -->
+        <div class="grid grid-cols-4 gap-1 text-center">
+          <button class="lang-btn active py-1.5 px-1 rounded-lg text-[11px] font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900" data-lang="en" onclick="setLanguage('en')">EN</button>
+          <button class="lang-btn py-1.5 px-1 rounded-lg text-[11px] font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
+          <button class="lang-btn py-1.5 px-1 rounded-lg text-[11px] font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900" data-lang="od" onclick="setLanguage('od')">ଓଡ଼ିଆ</button>
+          <button class="lang-btn py-1.5 px-1 rounded-lg text-[11px] font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900" data-lang="bn" onclick="setLanguage('bn')">বাংলা</button>
+        </div>
+      </div>
+
+      <!-- SECTION 1.5: CORE HEALTH SERVICES NAVIGATION -->
+      <div>
+        <div class="text-[11px] font-bold text-teal-800 dark:text-teal-300 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+          <span class="material-symbols-outlined text-[16px]">local_hospital</span>
+          <span>Core Healthcare Services</span>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <button class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-teal-50/50 dark:hover:bg-slate-800 text-left transition-all cursor-pointer" onclick="goToScreen('search'); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px]">search</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-800 dark:text-white" data-i18n="search">Search</div>
+              <div class="text-[10px] text-slate-500">Find medicines, symptoms & clinics</div>
+            </div>
+          </button>
+
+          <button class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-teal-50/50 dark:hover:bg-slate-800 text-left transition-all cursor-pointer" onclick="goToScreen('medicines'); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px]">medication</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-800 dark:text-white" data-i18n="medicines">Jan Aushadhi Pharmacy</div>
+              <div class="text-[10px] text-slate-500">Genuine generic medicines at 50-90% savings</div>
+            </div>
+          </button>
+
+          <button class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-teal-50/50 dark:hover:bg-slate-800 text-left transition-all cursor-pointer" onclick="goToScreen('order-tracking'); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px]">local_shipping</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-800 dark:text-white" data-i18n="orderTracking">Order Tracking</div>
+              <div class="text-[10px] text-slate-500">Live delivery status & rider ETA</div>
+            </div>
+          </button>
+
+          <button class="flex items-center gap-3 p-2.5 rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50/60 dark:bg-red-900/20 hover:bg-red-100/70 text-left transition-all cursor-pointer" onclick="goToScreen('emergency'); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center shadow-xs">
+              <span class="material-symbols-outlined text-[18px]">emergency</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-red-700 dark:text-red-300" data-i18n="emergency">Emergency 108 SOS</div>
+              <div class="text-[10px] text-red-600 dark:text-red-400">Immediate ambulance dispatch & siren</div>
+            </div>
+          </button>
+
+          <button class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-teal-50/50 dark:hover:bg-slate-800 text-left transition-all cursor-pointer" onclick="goToScreen('profile'); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px]">badge</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-800 dark:text-white" data-i18n="profile">Profile & ABHA Card</div>
+              <div class="text-[10px] text-slate-500">Digital health card & medical records</div>
+            </div>
+          </button>
+
+          <button class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-teal-50/50 dark:hover:bg-slate-800 text-left transition-all cursor-pointer" onclick="goToScreen('settings'); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px]">settings</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-800 dark:text-white" data-i18n="settings">Settings & Accessibility</div>
+              <div class="text-[10px] text-slate-500">23 Languages, font scale & alerts</div>
+            </div>
+          </button>
+
+          <button class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-red-50 dark:hover:bg-red-900/20 text-left transition-all cursor-pointer" onclick="window.logoutUser(); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px]">logout</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-700 hover:text-red-700" data-i18n="logout">Log Out</div>
+              <div class="text-[10px] text-slate-400">Clear session and return to login</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- SECTION 2: WORK STATION (VIEW MODES) -->
+      <div>
+        <div class="text-[11px] font-bold text-teal-800 dark:text-teal-300 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+          <span class="material-symbols-outlined text-[16px]">desktop_windows</span>
+          <span>Work Station & View Modes</span>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <button class="menu-workstation-item view-tab flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-left transition-all cursor-pointer" data-mode="workstation" onclick="setViewMode('workstation'); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px]">splitscreen</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-800 dark:text-white">Dual Workstation</div>
+              <div class="text-[10px] text-slate-500">Split-screen queue & clinical review desk</div>
+            </div>
+          </button>
+          <button class="menu-workstation-item view-tab active flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-left transition-all cursor-pointer" data-mode="mobile" onclick="setViewMode('mobile'); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px]">web</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-800 dark:text-white">Web App Portal</div>
+              <div class="text-[10px] text-slate-500">Interactive patient flow portal</div>
+            </div>
+          </button>
+          <button class="menu-workstation-item view-tab flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-left transition-all cursor-pointer" data-mode="storyboard" onclick="setViewMode('storyboard'); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px]">dashboard_customize</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-800 dark:text-white">Figma Flow Board</div>
+              <div class="text-[10px] text-slate-500">Panoramic view of all 11 screens</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION 3: DASHBOARDS -->
+      <div>
+        <div class="text-[11px] font-bold text-teal-800 dark:text-teal-300 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+          <span class="material-symbols-outlined text-[16px]">dashboard</span>
+          <span>Dashboards</span>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <button class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-left transition-all cursor-pointer" onclick="goToScreen('facility-admin'); switchUserRole('admin'); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px]">analytics</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-800 dark:text-white">Facility Admin Dashboard</div>
+              <div class="text-[10px] text-slate-500">Dr. Ananya Roy • 128 Caseload & Concordance</div>
+            </div>
+          </button>
+          <button class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-left transition-all cursor-pointer" onclick="goToScreen('hw-dashboard'); switchUserRole('nurse'); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px]">stethoscope</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-800 dark:text-white">Nurse Queue Console</div>
+              <div class="text-[10px] text-slate-500">Sister Priya • 28 Patients Live</div>
+            </div>
+          </button>
+          <button class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-left transition-all cursor-pointer" onclick="goToScreen('patient-home'); switchUserRole('patient'); closeLeftMenu();">
+            <div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px]">person</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-800 dark:text-white">Patient Dashboard</div>
+              <div class="text-[10px] text-slate-500">Sunita Devi (42F) • Active Case</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION 4: TRIAGE MODULES (ALL 12 SCREENS) -->
+      <div>
+        <div class="text-[11px] font-bold text-teal-800 dark:text-teal-300 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+          <span class="material-symbols-outlined text-[16px]">linear_scale</span>
+          <span>Triage Modules & Steps</span>
+        </div>
+        <div class="grid grid-cols-2 gap-1.5 text-xs">
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('splash'); closeLeftMenu();">
+            1. Login Portal
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('role-select'); closeLeftMenu();">
+            2. Role Portal
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('consent'); closeLeftMenu();">
+            3. Privacy Consent
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('patient-home'); closeLeftMenu();">
+            4. Patient Dashboard
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('multimodal-input'); closeLeftMenu();">
+            5. Multimodal Studio
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('ai-processing'); closeLeftMenu();">
+            6. AI Processing
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('symptom-summary'); closeLeftMenu();">
+            7. Missing Info
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('triage-summary'); closeLeftMenu();">
+            8. Triage Note
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('hw-dashboard'); closeLeftMenu();">
+            9. Nurse Queue
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('hw-review'); closeLeftMenu();">
+            10. Clinical Review
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('referral-prep'); closeLeftMenu();">
+            11. Referral Handover
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('facility-admin'); closeLeftMenu();">
+            12. Facility Admin
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION 5: SYSTEM CONTROLS -->
+      <div class="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end text-xs">
+        <button class="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer w-full" onclick="toggleTheme()">
+          <span class="material-symbols-outlined text-[16px]">contrast</span>
+          <span>Dark / Light Mode</span>
+        </button>
+      </div>
     </div>
-  </div>
+  </aside>
 
   <!-- ================= MAIN APP VIEWPORT (WEBSITE FORMAT) ================= -->
   <main class="app-main-viewport">
@@ -170,175 +509,332 @@
         <div class="relative w-full max-w-7xl mx-auto py-6 flex flex-col items-center">
           <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-[720px] h-[360px] bg-gradient-to-r from-teal-500/15 via-teal-200/25 to-emerald-300/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
           
-          <!-- Hero Section -->
-          <div class="flex flex-col items-center text-center max-w-4xl mt-4 mb-10">
-            <div class="inline-flex items-center gap-2 bg-teal-50/90 border border-teal-200/80 backdrop-blur-md px-4 py-1.5 rounded-full shadow-sm mb-6">
+          <!-- Portal Header -->
+          <div class="flex flex-col items-center text-center max-w-4xl mt-2 mb-8">
+            <div class="inline-flex items-center gap-2 bg-teal-50/90 border border-teal-200/80 backdrop-blur-md px-4 py-1.5 rounded-full shadow-xs mb-4">
               <span class="material-symbols-outlined text-teal-700 text-[18px]">verified_user</span>
-              <span class="text-xs tracking-wider uppercase text-teal-900 font-bold">CLINICAL GRADE AI • TRIAGE LIVE</span>
+              <span class="text-xs tracking-wider uppercase text-teal-900 font-bold">ABDM COMPLIANT CLINICAL GATEWAY • VERSION 2.4</span>
               <span class="w-1.5 h-1.5 rounded-full bg-teal-600/40"></span>
-              <span class="text-xs text-teal-700 font-semibold">Version 2.4 Ready</span>
+              <span class="text-xs text-teal-700 font-semibold">Triage Live</span>
             </div>
 
-            <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-[54px] lg:leading-[64px] text-slate-900 tracking-tight mb-5">
-              Smarter Triage. Faster Care. <br class="hidden sm:inline"/>
-              <span class="bg-gradient-to-r from-teal-700 via-teal-600 to-teal-500 bg-clip-text text-transparent">Human at the Centre.</span>
+            <h1 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-[46px] lg:leading-[54px] text-slate-900 tracking-tight mb-3">
+              ELARA 2.0 Clinical Portal Login
             </h1>
-
-            <p class="font-body-lg text-lg text-slate-600 max-w-3xl leading-relaxed mb-8">
-              Human-reviewed healthcare triage support for primary health centres, clinics, and district hospitals. Bridging clinical acuity with empathetic regional patient intake.
+            <p class="font-body-lg text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
+              Secure digital access for <b class="text-slate-900">Patients</b> (Self-Check In & Normal Triage) and <b class="text-slate-900">Healthcare Givers</b> (Staff Nurses & Clinical Work Station).
             </p>
-
-            <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-              <button class="w-full sm:w-auto px-8 py-4 rounded-full bg-teal-700 hover:bg-teal-800 text-white font-bold text-sm tracking-wide transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-3 cursor-pointer group" onclick="goToScreen('role-select')">
-                <span>Launch Triage Portal</span>
-                <span class="material-symbols-outlined text-white group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </button>
-              <button class="w-full sm:w-auto px-7 py-4 rounded-full bg-white hover:bg-teal-50 text-slate-800 border border-slate-200 hover:border-teal-300 font-semibold text-sm transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer" onclick="quickFillDemoPatient()">
-                <span class="material-symbols-outlined text-teal-700 text-[20px]">play_circle</span>
-                <span>Interactive Demo Intake (Sunita Devi)</span>
-              </button>
-            </div>
-
-            <div class="mt-6 flex flex-wrap items-center justify-center gap-6 text-slate-600 text-xs font-semibold">
-              <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-teal-600 text-[18px]">verified</span> Multi-dialect STT (Hindi/Odia)</span>
-              <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-teal-600 text-[18px]">shield</span> Human MO in-the-loop</span>
-              <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-teal-600 text-[18px]">speed</span> Sub-minute SOAP Summaries</span>
-            </div>
           </div>
 
-          <!-- Protocol Guided Safety Shield Banner -->
-          <div class="w-full max-w-5xl mb-12 bg-teal-50/80 border border-teal-200/80 rounded-2xl p-4 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-11 h-11 rounded-full bg-teal-700 flex items-center justify-center text-white shrink-0 shadow-xs">
-                <span class="material-symbols-outlined text-[24px]">health_and_safety</span>
+          <!-- Main Login Portal Grid (12 Columns) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-6xl mb-10 items-start">
+            
+            <!-- Left Column: Interactive Login Card (7 Cols) -->
+            <div class="lg:col-span-7 bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-sm hover:shadow-md transition-all">
+              
+              <!-- Role Switcher Segmented Tabs -->
+              <div class="mb-6">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Select Your Portal Role</label>
+                <div class="bg-slate-100/90 p-1.5 rounded-2xl flex items-center gap-1 border border-slate-200/80">
+                  <button type="button" class="login-tab-btn active flex-1 py-3 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-bold bg-white text-teal-900 shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer" onclick="setLoginRole('patient', this)">
+                    <span class="material-symbols-outlined text-[18px]">person</span>
+                    <span>Patient / Citizen</span>
+                  </button>
+                  <button type="button" class="login-tab-btn flex-1 py-3 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 flex items-center justify-center gap-2 transition-all hover:text-teal-900 cursor-pointer" onclick="setLoginRole('nurse', this)">
+                    <span class="material-symbols-outlined text-[18px]">stethoscope</span>
+                    <span>Healthcare Giver</span>
+                  </button>
+                  <button type="button" class="login-tab-btn flex-1 py-3 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 flex items-center justify-center gap-2 transition-all hover:text-teal-900 cursor-pointer" onclick="setLoginRole('admin', this)">
+                    <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+                    <span>Facility Admin</span>
+                  </button>
+                </div>
               </div>
-              <div class="text-left">
-                <h3 class="font-bold text-slate-900 text-sm sm:text-base">Protocol Guided Clinical Safety Shield</h3>
-                <p class="text-xs text-slate-600">All triage categorisations are validated against AIIMS & WHO district hospital triage norms with physician override.</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 bg-white border border-teal-200 px-3.5 py-1.5 rounded-xl shadow-xs shrink-0">
-              <span class="w-2 h-2 rounded-full bg-teal-600"></span>
-              <span class="text-xs font-bold text-slate-800">Doctor Verification Active</span>
-            </div>
-          </div>
 
-          <!-- 3-Column Desktop Feature Cards (Stitch Design) -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mb-12">
-            <!-- Feature 1: Multimodal Voice Intake -->
-            <div class="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-4">
-                  <div class="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700">
-                    <span class="material-symbols-outlined text-[28px]">mic</span>
+              <!-- ================= 1. PATIENT LOGIN FORM ================= -->
+              <div id="patientLoginForm" class="space-y-5">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div>
+                    <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                      <span class="material-symbols-outlined text-teal-600 text-[20px]">how_to_reg</span>
+                      <span>Patient Check-in & Intake</span>
+                    </h2>
+                    <p class="text-xs text-slate-500">Sign in with ABHA ID or mobile number to enter Normal Triage</p>
                   </div>
-                  <span class="text-xs font-bold px-3 py-1 rounded-full bg-teal-50 border border-teal-100 text-teal-800">VOICE-FIRST</span>
+                  <span class="text-xs px-2.5 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 font-bold">OPD Self-Service</span>
                 </div>
-                <h3 class="font-display font-bold text-lg text-slate-900 mb-2">Multimodal Voice Intake</h3>
-                <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                  Real-time speech-to-text tailored for Indian dialects. Captures natural symptom narratives with colloquial phrasing in Hindi, Odia, Bengali, and Indian English.
-                </p>
-                <div class="bg-teal-50/70 border border-teal-100 rounded-2xl p-3.5 mb-3">
-                  <div class="flex items-center justify-between text-xs text-slate-600 font-semibold mb-2">
-                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-teal-600 animate-ping"></span> Live Audio Stream</span>
-                    <span class="text-teal-800 font-bold">Hindi (Awadhi accent)</span>
-                  </div>
-                  <div class="h-8 flex items-center gap-1.5 justify-center py-1">
-                    <span class="w-1.5 bg-teal-600/70 rounded-full h-3 animate-pulse"></span>
-                    <span class="w-1.5 bg-teal-600 rounded-full h-6 animate-pulse"></span>
-                    <span class="w-1.5 bg-teal-700 rounded-full h-8 animate-pulse"></span>
-                    <span class="w-1.5 bg-teal-500 rounded-full h-5 animate-pulse"></span>
-                    <span class="w-1.5 bg-teal-600 rounded-full h-7 animate-pulse"></span>
-                  </div>
-                  <p class="text-xs italic text-slate-900 font-medium text-center truncate mt-1">"दो दिन से बहुत तेज़ सिरदर्द और उल्टी जैसा लग रहा है..."</p>
-                </div>
-              </div>
-              <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-teal-700 font-semibold">
-                <span>Accuracy: 97.4% Clinical NLP</span>
-                <span class="material-symbols-outlined text-[18px]">record_voice_over</span>
-              </div>
-            </div>
 
-            <!-- Feature 2: Document & Lab OCR -->
-            <div class="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-4">
-                  <div class="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700">
-                    <span class="material-symbols-outlined text-[28px]">document_scanner</span>
+                <!-- ABHA / Mobile Input -->
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">ABHA ID or Mobile Number *</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                      <span class="material-symbols-outlined text-[20px]">badge</span>
+                    </div>
+                    <input type="text" id="authInput" value="91-4820-1928-3341 (Sunita Devi)" placeholder="Enter 14-digit ABHA or 10-digit mobile" class="w-full pl-10 pr-24 py-3 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 text-sm text-slate-800 bg-slate-50/50 font-medium">
+                    <button type="button" class="absolute right-2 top-2 px-3 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-800 rounded-lg text-xs font-bold transition-colors" onclick="showToast('ABHA ID Verified via NDHM Registry', '✓')">
+                      Verify
+                    </button>
                   </div>
-                  <span class="text-xs font-bold px-3 py-1 rounded-full bg-teal-50 border border-teal-100 text-teal-800">SMART OCR</span>
+                  <span class="text-[11px] text-teal-700 font-medium mt-1 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[14px]">check_circle</span> Linked with Ayushman Bharat Digital Mission (ABDM)
+                  </span>
                 </div>
-                <h3 class="font-display font-bold text-lg text-slate-900 mb-2">Document & Lab OCR</h3>
-                <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                  Digitise wrinkled, low-light clinical lab reports. Instantly flags critical abnormal ranges for CBC, blood sugar, lipid panels, and fever profiles.
-                </p>
-                <div class="bg-teal-50/70 border border-teal-100 rounded-2xl p-3.5 mb-3 flex flex-col gap-2">
-                  <div class="flex justify-between items-center text-xs font-semibold text-slate-600">
-                    <span>CBC Extraction</span>
-                    <span class="text-red-700 font-bold flex items-center gap-1">
-                      <span class="material-symbols-outlined text-[14px]">warning</span> Alert Value
+
+                <!-- Patient Demographics Preview -->
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Patient Full Name</label>
+                    <input type="text" value="Sunita Devi" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-slate-50/50 font-medium">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Age & Gender</label>
+                    <input type="text" value="32 Yrs / Female" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-slate-50/50 font-medium">
+                  </div>
+                </div>
+
+                <!-- Preferred Language Dropdown -->
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">Preferred Intake Dialect / Language</label>
+                  <div class="relative">
+                    <select class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-white font-medium focus:border-teal-600 focus:ring-2 focus:ring-teal-100">
+                      <option value="hi" selected>Hindi (हिंदी - Regional Dialects Supported)</option>
+                      <option value="or">Odia (ଓଡ଼ିଆ - Sambalpuri / Coastal)</option>
+                      <option value="bn">Bengali (বাংলা)</option>
+                      <option value="te">Telugu (తెలుగు)</option>
+                      <option value="en">English (Standard Medical)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Password / Passcode Input -->
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <label class="block text-xs font-semibold text-slate-700" data-i18n="password">Password / Security PIN *</label>
+                    <button type="button" onclick="window.openForgotPasswordModal()" class="text-xs text-teal-700 hover:underline font-bold" data-i18n="forgotPassword">
+                      Forgot Password?
+                    </button>
+                  </div>
+                  <div class="relative">
+                    <input type="password" id="patientLoginPassword" value="password123" placeholder="Enter your 6-digit PIN or password" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-slate-50/50 font-medium focus:border-teal-600 focus:ring-2 focus:ring-teal-100">
+                  </div>
+                </div>
+
+                <!-- Validation Error Message Box -->
+                <div id="patientLoginError" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-semibold flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[18px]">error</span>
+                  <span id="patientLoginErrorText">Please provide valid credentials</span>
+                </div>
+
+                <!-- Consent Note -->
+                <div class="flex items-start gap-2.5 p-3 rounded-xl bg-teal-50/60 border border-teal-100 text-xs text-slate-600">
+                  <input type="checkbox" id="patientLoginConsent" checked class="mt-0.5 rounded text-teal-700 focus:ring-teal-500">
+                  <label for="patientLoginConsent" class="cursor-pointer" data-i18n="termsNotice">
+                    I consent to sharing triage symptom records with the on-duty Medical Officer under ABDM Data Privacy guidelines.
+                  </label>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-2.5 pt-1">
+                  <button type="button" id="patientLoginSubmitBtn" class="w-full py-3.5 px-6 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-sm tracking-wide transition-all shadow-sm hover:shadow flex items-center justify-center gap-2 cursor-pointer" onclick="loginAsPatient()">
+                    <span data-i18n="enterTriageBtn">Sign In as Patient & Continue to Triage</span>
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                  </button>
+                  
+                  <div class="flex items-center justify-between text-xs pt-1 px-1">
+                    <span class="text-slate-500" data-i18n="needAnAccount">Don't have an account?</span>
+                    <button type="button" onclick="window.openSignUpModal()" class="text-teal-800 hover:text-teal-900 font-extrabold hover:underline" data-i18n="signUp">
+                      Register Now (ABHA / Mobile)
+                    </button>
+                  </div>
+
+                  <button type="button" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-teal-50 text-slate-800 border border-slate-200 hover:border-teal-200 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer" onclick="quickFillDemoPatient()">
+                    <span class="material-symbols-outlined text-teal-700 text-[18px]">bolt</span>
+                    <span data-i18n="quickDemoPatient">1-Click Interactive Demo (Sunita Devi • Severe Abdominal Pain)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- ================= 2. HEALTHCARE GIVER / NURSE LOGIN FORM ================= -->
+              <div id="nurseLoginForm" class="hidden space-y-5">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div>
+                    <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                      <span class="material-symbols-outlined text-teal-600 text-[20px]">stethoscope</span>
+                      <span>Healthcare Provider & Work Station Login</span>
+                    </h2>
+                    <p class="text-xs text-slate-500">Access acute OPD triage queue, SOAP notes, and vitals review</p>
+                  </div>
+                  <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold">Clinical Staff</span>
+                </div>
+
+                <!-- Registration / Council ID -->
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">Staff NUID / Nursing Council Registration No. *</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                      <span class="material-symbols-outlined text-[20px]">badge</span>
+                    </div>
+                    <input type="text" value="NR-2024-DEL-8941" placeholder="e.g. NR-2024-DEL-8941" class="w-full pl-10 pr-24 py-3 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 text-sm text-slate-800 bg-slate-50/50 font-medium">
+                    <span class="absolute right-3 top-3 text-xs text-emerald-700 font-bold flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[16px]">verified</span> Verified
                     </span>
                   </div>
-                  <div class="flex justify-between items-center bg-white p-2 rounded-xl text-xs border border-teal-50">
-                    <span class="text-slate-800 font-medium">Hemoglobin (Hb)</span>
-                    <span class="font-bold text-slate-900">11.2 g/dL <span class="text-amber-700 font-bold">(Low)</span></span>
+                </div>
+
+                <!-- Staff Name & Unit -->
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Staff Nurse Name</label>
+                    <input type="text" value="Sister Priya Sharma" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-slate-50/50 font-medium">
                   </div>
-                  <div class="flex justify-between items-center bg-white p-2 rounded-xl text-xs border border-teal-50">
-                    <span class="text-slate-800 font-medium">Platelet Count</span>
-                    <span class="font-bold text-slate-900">2.1 lakh/µL</span>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Assigned Work Station</label>
+                    <select class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-white font-medium">
+                      <option selected>OPD Triage Station 1</option>
+                      <option>Emergency Screening Room</option>
+                      <option>Inpatient Ward Bed 1-12</option>
+                    </select>
                   </div>
                 </div>
+
+                <!-- Assigned Facility -->
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">Health Facility / PHC Code</label>
+                  <input type="text" value="PHC-DHENKANAL-04 • Dhenkanal Sub-District Hospital" readonly class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-700 bg-slate-100 font-medium">
+                </div>
+
+                <!-- Security PIN -->
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">Biometric PIN / Access Passcode</label>
+                  <div class="relative">
+                    <input type="password" value="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 font-medium">
+                    <span class="absolute right-3 top-3 text-xs text-slate-400">PIN Saved</span>
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-2.5 pt-1">
+                  <button type="button" class="w-full py-3.5 px-6 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-sm tracking-wide transition-all shadow-sm hover:shadow flex items-center justify-center gap-2 cursor-pointer" onclick="loginAsNurse()">
+                    <span class="material-symbols-outlined text-[18px]">clinical_notes</span>
+                    <span>Sign In to Nurse Work Station (Queue: 28 Cases)</span>
+                  </button>
+                  
+                  <button type="button" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-800 border border-slate-200 hover:border-emerald-200 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer" onclick="loginAsNurse()">
+                    <span class="material-symbols-outlined text-emerald-700 text-[18px]">login</span>
+                    <span>1-Click Fast Nurse Login (Sister Priya Sharma)</span>
+                  </button>
+                </div>
               </div>
-              <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-teal-700 font-semibold">
-                <span>Instant Flag Extraction</span>
-                <span class="material-symbols-outlined text-[18px]">receipt_long</span>
+
+              <!-- ================= 3. FACILITY ADMIN / MO LOGIN FORM ================= -->
+              <div id="adminLoginForm" class="hidden space-y-5">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div>
+                    <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                      <span class="material-symbols-outlined text-teal-600 text-[20px]">admin_panel_settings</span>
+                      <span>Medical Officer & Facility Administration</span>
+                    </h2>
+                    <p class="text-xs text-slate-500">Supervisory dashboard, protocol overrides, and referral routing</p>
+                  </div>
+                  <span class="text-xs px-2.5 py-1 rounded-full bg-purple-50 border border-purple-200 text-purple-800 font-bold">Facility Admin</span>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">Medical Council (MCI / NMC) Registration No. *</label>
+                  <input type="text" value="MCI-DEL-2018-44210" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-slate-50/50 font-medium">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Officer Name</label>
+                    <input type="text" value="Dr. Ananya Roy" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-slate-50/50 font-medium">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Facility Role</label>
+                    <input type="text" value="Medical Superintendent" readonly class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-700 bg-slate-100 font-medium">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">Digital Signature PIN / Admin Token</label>
+                  <input type="password" value="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 font-medium">
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-2.5 pt-1">
+                  <button type="button" class="w-full py-3.5 px-6 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-sm tracking-wide transition-all shadow-sm hover:shadow flex items-center justify-center gap-2 cursor-pointer" onclick="loginAsAdmin()">
+                    <span class="material-symbols-outlined text-[18px]">verified</span>
+                    <span>Sign In as Facility Admin (Dr. Roy)</span>
+                  </button>
+                </div>
               </div>
+
             </div>
 
-            <!-- Feature 3: Clinical Chat & SOAP Notes -->
-            <div class="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-4">
-                  <div class="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700">
-                    <span class="material-symbols-outlined text-[28px]">clinical_notes</span>
-                  </div>
-                  <span class="text-xs font-bold px-3 py-1 rounded-full bg-teal-50 border border-teal-100 text-teal-800">SOAP NOTES</span>
+            <!-- Right Column: Fast Portal Shortcuts & Safety (5 Cols) -->
+            <div class="lg:col-span-5 flex flex-col gap-5">
+
+              <!-- Quick One-Click Entry Cards -->
+              <div class="bg-white border border-slate-200/90 rounded-3xl p-5 shadow-sm space-y-3">
+                <div class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-1 flex items-center justify-between">
+                  <span>Fast Portal Shortcuts</span>
+                  <span class="text-teal-700 text-[11px] font-semibold">1-Click Launch</span>
                 </div>
-                <h3 class="font-display font-bold text-lg text-slate-900 mb-2">Clinical Chat & Triage</h3>
-                <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                  Converts disjointed symptoms into structured SOAP notes with automated red-flag differential prompts, saving nurses and doctors 4+ minutes per intake.
+
+                <!-- Patient Direct Entry -->
+                <div class="p-3.5 rounded-2xl bg-teal-50/70 border border-teal-100 hover:border-teal-300 transition-all flex items-center justify-between gap-3 cursor-pointer group" onclick="loginAsPatient()">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-teal-700 text-white flex items-center justify-center shrink-0">
+                      <span class="material-symbols-outlined text-[20px]">person</span>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-slate-900 group-hover:text-teal-800 transition-colors">Patient Triage Portal</h4>
+                      <p class="text-[11px] text-slate-500">Normal Triage, speech intake, and symptom review</p>
+                    </div>
+                  </div>
+                  <span class="material-symbols-outlined text-teal-700 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </div>
+
+                <!-- Healthcare Giver Direct Entry -->
+                <div class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-100 hover:border-emerald-300 transition-all flex items-center justify-between gap-3 cursor-pointer group" onclick="loginAsNurse()">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center shrink-0">
+                      <span class="material-symbols-outlined text-[20px]">stethoscope</span>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-slate-900 group-hover:text-emerald-800 transition-colors">Nurse Work Station</h4>
+                      <p class="text-[11px] text-slate-500">Live triage queue, vitals entry, and doctor handover</p>
+                    </div>
+                  </div>
+                  <span class="material-symbols-outlined text-emerald-700 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </div>
+
+                <!-- Regional Language / Translator Entry -->
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-teal-200 transition-all flex items-center justify-between gap-3 cursor-pointer group" onclick="goToScreen('multimodal-input')">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-slate-800 text-white flex items-center justify-center shrink-0">
+                      <span class="material-symbols-outlined text-[20px]">translate</span>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-slate-900 group-hover:text-teal-800 transition-colors">Translator & Speech Intake</h4>
+                      <p class="text-[11px] text-slate-500">Hindi, Odia, Bengali dialect translation & Normal Triage</p>
+                    </div>
+                  </div>
+                  <span class="material-symbols-outlined text-slate-600 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </div>
+              </div>
+
+              <!-- Safety Protocol Compliance Banner -->
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs text-slate-600 flex items-center gap-3">
+                <span class="material-symbols-outlined text-teal-700 text-[24px] shrink-0">health_and_safety</span>
+                <p class="leading-relaxed">
+                  <b class="text-slate-900">Protocol Guided Clinical Safety:</b> Validated against AIIMS & WHO district hospital triage standards with Medical Officer oversight.
                 </p>
-                <div class="bg-teal-50/70 border border-teal-100 rounded-2xl p-3.5 mb-3 flex flex-col gap-2">
-                  <div class="flex items-center gap-2">
-                    <span class="px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-900 text-xs font-bold border border-teal-200">Priority Triage</span>
-                    <span class="text-xs text-slate-600">Category 2 Recommended</span>
-                  </div>
-                  <div class="bg-white p-2 rounded-xl text-xs border border-teal-50">
-                    <span class="font-bold text-teal-700">S:</span> Severe cephalea, photophobia 24h
-                  </div>
-                  <div class="bg-white p-2 rounded-xl text-xs border border-teal-50">
-                    <span class="font-bold text-teal-700">A:</span> Febrile illness workup; verify dengue NS1
-                  </div>
-                </div>
               </div>
-              <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-teal-700 font-semibold">
-                <span>FHIR & EMR Exportable</span>
-                <span class="material-symbols-outlined text-[18px]">sync_saved_locally</span>
-              </div>
-            </div>
-          </div>
 
-          <!-- Pilot Banner & Emergency Hotline -->
-          <div class="w-full max-w-5xl rounded-2xl bg-red-50 border border-red-200 p-4 shadow-xs mb-8 flex items-center justify-between flex-wrap gap-4 text-left">
-            <div class="flex items-center gap-3">
-              <span class="material-symbols-outlined text-red-600 text-[24px]">crisis_alert</span>
-              <p class="text-xs text-red-900 font-semibold leading-relaxed">
-                <span class="font-bold uppercase">Emergency Notice:</span> In case of chest pain, acute trauma, or difficulty breathing, dial emergency response immediately (<span class="underline font-bold">108</span> or <span class="underline font-bold">112</span>). Do not wait for AI triage evaluation.
-              </p>
             </div>
-            <a class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-full text-xs font-bold shadow-xs transition-colors shrink-0" href="tel:108">
-              Call 108 Emergency
-            </a>
+
           </div>
 
           <!-- Footer -->
@@ -349,7 +845,7 @@
               <span class="bg-slate-100 border border-slate-200 px-3 py-1 rounded-full">100% Privacy Protected</span>
             </div>
             <p class="text-xs text-slate-500 max-w-2xl">
-              ELARA SehatSaarthi is a clinical decision support system designed exclusively for registered healthcare workers and supervised triage. Not a replacement for formal medical diagnosis.
+              ELARA 2.0 is a clinical decision support system designed exclusively for registered healthcare workers and supervised triage. Not a replacement for formal medical diagnosis.
             </p>
           </footer>
         </div>
@@ -635,13 +1131,13 @@
             </div>
           </div>
 
-          <!-- Hero Banner: Compassionate AI Voice Triage (Stitch Screen 3) -->
+          <!-- Hero Banner: Compassionate AI Normal Triage (Stitch Screen 3) -->
           <div class="relative overflow-hidden rounded-[28px] bg-gradient-to-r from-teal-800 via-teal-700 to-teal-900 p-8 shadow-md text-white">
             <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
               <div class="max-w-2xl flex flex-col gap-3">
                 <div class="inline-flex items-center gap-2 bg-white/15 border border-white/20 px-3.5 py-1 rounded-full w-fit">
                   <span class="material-symbols-outlined text-teal-200 text-[18px]">spa</span>
-                  <span class="text-xs font-semibold text-teal-100 uppercase tracking-wide">Multimodal AI Saarthi • Odia, Hindi & English</span>
+                  <span class="text-xs font-semibold text-teal-100 uppercase tracking-wide">Multimodal AI Assistant • Odia, Hindi & English</span>
                 </div>
                 <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-white leading-snug">
                   Need help describing your symptoms? <br class="hidden sm:inline"/>
@@ -652,10 +1148,10 @@
                 </p>
                 <div class="flex items-center gap-4 pt-2 flex-wrap">
                   <button class="flex items-center gap-3 px-8 py-3.5 rounded-full bg-white text-teal-900 hover:bg-teal-50 font-bold text-sm shadow-md transition-all cursor-pointer" onclick="startTriageMethod('voice')">
-                    <span class="material-symbols-outlined text-[24px] text-teal-700">mic</span>
-                    <span>Start Voice Triage</span>
+                    <span class="material-symbols-outlined text-[24px] text-teal-700">clinical_notes</span>
+                    <span>Start Normal Triage</span>
                   </button>
-                  <span class="text-xs text-teal-200 font-medium">Listening in Realtime (Zero Typing Required)</span>
+                  <span class="text-xs text-teal-200 font-medium">Standard intake & dialect recognition ready</span>
                 </div>
               </div>
 
@@ -682,20 +1178,20 @@
 
           <!-- 3 Quick Modality Pathways (Stitch Screen 3) -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Pathway 1: Voice Intake -->
+            <!-- Pathway 1: Normal Triage Intake -->
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs hover:shadow-md hover:border-teal-300 transition-all flex flex-col justify-between cursor-pointer" onclick="startTriageMethod('voice')">
               <div>
                 <div class="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700 mb-4">
-                  <span class="material-symbols-outlined text-[28px]">mic</span>
+                  <span class="material-symbols-outlined text-[28px]">clinical_notes</span>
                 </div>
                 <div class="flex items-center justify-between mb-1">
-                  <h3 class="font-display font-bold text-base text-slate-900">Voice Intake</h3>
-                  <span class="text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-full">Fastest</span>
+                  <h3 class="font-display font-bold text-base text-slate-900">Normal Triage</h3>
+                  <span class="text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-full">Standard</span>
                 </div>
-                <p class="text-xs text-slate-600 leading-relaxed">Speak openly in Hindi, Odia, or English. Automatic translation & symptom extraction.</p>
+                <p class="text-xs text-slate-600 leading-relaxed">Describe symptoms naturally in Hindi, Odia, or English. Automated structured triage extraction.</p>
               </div>
               <div class="pt-4 mt-2 flex items-center gap-1.5 text-xs text-teal-700 font-bold">
-                <span>Record voice clip</span>
+                <span>Start normal triage</span>
                 <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
               </div>
             </div>
@@ -825,8 +1321,8 @@
             <div class="flex items-center gap-3">
               <div class="bg-slate-100 p-1 rounded-full flex items-center gap-1 border border-slate-200">
                 <button class="input-tab-btn active px-4 py-2 rounded-full text-xs font-bold text-teal-900 bg-white shadow-xs flex items-center gap-1.5" id="tabBtnVoice" onclick="switchInputTab('voice')">
-                  <span class="material-symbols-outlined text-[18px] text-teal-700">mic</span>
-                  <span>Voice Console</span>
+                  <span class="material-symbols-outlined text-[18px] text-teal-700">clinical_notes</span>
+                  <span>Normal Triage</span>
                 </button>
                 <button class="input-tab-btn px-4 py-2 rounded-full text-xs font-semibold text-slate-600 flex items-center gap-1.5" id="tabBtnText" onclick="switchInputTab('text')">
                   <span class="material-symbols-outlined text-[18px]">keyboard</span>
@@ -1226,7 +1722,7 @@
                   <span class="bg-slate-100 px-3 py-1 rounded-full text-xs font-bold text-slate-700">42 yrs • Female</span>
                   <span class="bg-teal-50 border border-teal-200 text-teal-800 px-3 py-1 rounded-full text-xs font-bold font-mono">ID: P-1042</span>
                 </div>
-                <p class="text-xs text-slate-500 mt-1">Sharda PHC Navrangpura • Multimodal Triage Session: Hindi Voice + Laboratory PDF</p>
+                <p class="text-xs text-slate-500 mt-1">Sharda PHC Navrangpura • Normal Triage Session: Hindi Voice + Laboratory PDF</p>
               </div>
             </div>
 
@@ -1613,11 +2109,811 @@
                 <div class="bg-amber-500 h-full" style="width: 17%;"></div>
               </div>
             </div>
+      </section>
+
+      <!-- ================= SCREEN 13: UNIVERSAL SEARCH & CLINICAL LOOKUP ================= -->
+      <section class="screen-view" id="screen-search">
+        <div class="relative w-full max-w-5xl mx-auto py-6 flex flex-col gap-6">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-teal-800 block" data-i18n="search">UNIVERSAL SEARCH</span>
+              <h2 class="font-display font-extrabold text-2xl text-slate-900" data-i18n="searchPlaceholder">Health Portal & Clinical Lookup</h2>
+              <span class="text-xs text-slate-500">Search Jan Aushadhi medicines, symptoms, clinics, or active prescription orders</span>
+            </div>
+            <button class="bg-white border border-slate-200 hover:bg-slate-50 px-4 py-2 rounded-full text-xs font-semibold text-slate-700 cursor-pointer" onclick="goBack()">
+              ← <span data-i18n="back">Back</span>
+            </button>
+          </div>
+
+          <!-- Search Input Bar with Speech-to-Text Voice Button -->
+          <div class="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[24px] text-teal-700 pl-2">search</span>
+              <input type="text" id="searchQueryInput" oninput="window.performSearch(this.value)" placeholder="Search medicines (e.g. Paracetamol), symptoms, clinics, or orders..." class="w-full py-2.5 px-2 text-sm text-slate-800 bg-transparent outline-none font-medium" data-i18n-placeholder="searchPlaceholder">
+              
+              <!-- Voice Microphone STT Button -->
+              <button type="button" class="voice-input-btn p-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 transition-all cursor-pointer shrink-0" onclick="window.ElaraVoice.startListening('searchQueryInput', (q) => window.performSearch(q))" title="Voice Search (Speak in any language)">
+                <span class="material-symbols-outlined text-[20px]">mic</span>
+              </button>
+
+              <!-- Clear Search Button -->
+              <button type="button" class="p-2 text-slate-400 hover:text-slate-700 transition-colors" onclick="document.getElementById('searchQueryInput').value=''; window.performSearch('');">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <!-- Filter Categories -->
+            <div class="flex items-center gap-2 pt-3 border-t border-slate-100 overflow-x-auto text-xs">
+              <span class="text-slate-400 font-semibold shrink-0">Filter:</span>
+              <button class="search-filter-pill active px-3 py-1 rounded-full bg-teal-700 text-white font-bold" data-filter="all" onclick="window.filterSearch('all')">All</button>
+              <button class="search-filter-pill px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-medium hover:bg-slate-200" data-filter="medicines" onclick="window.filterSearch('medicines')">Medicines</button>
+              <button class="search-filter-pill px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-medium hover:bg-slate-200" data-filter="symptoms" onclick="window.filterSearch('symptoms')">Symptoms</button>
+              <button class="search-filter-pill px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-medium hover:bg-slate-200" data-filter="orders" onclick="window.filterSearch('orders')">Orders</button>
+            </div>
+          </div>
+
+          <!-- Quick Suggestion Chips -->
+          <div class="flex items-center gap-2 flex-wrap text-xs">
+            <span class="text-slate-500 font-semibold">Suggested:</span>
+            <button class="px-3 py-1 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-900 border border-teal-200 font-medium" onclick="window.setSearchQuery('Paracetamol')">💊 Paracetamol 650mg</button>
+            <button class="px-3 py-1 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-900 border border-teal-200 font-medium" onclick="window.setSearchQuery('ORS')">💧 ORS Electrolyte</button>
+            <button class="px-3 py-1 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-900 border border-teal-200 font-medium" onclick="window.setSearchQuery('High Fever')">🌡️ High Fever</button>
+            <button class="px-3 py-1 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-900 border border-teal-200 font-medium" onclick="window.setSearchQuery('Amoxicillin')">💊 Amoxicillin</button>
+            <button class="px-3 py-1 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-900 border border-teal-200 font-medium" onclick="window.setSearchQuery('ORD-7821')">📦 Order #ORD-7821</button>
+          </div>
+
+          <!-- Search Results Container -->
+          <div id="searchResultsContainer" class="flex flex-col gap-3">
+            <!-- Populated dynamically by performSearch() -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SCREEN 14: PM JAN AUSHADHI GENERIC PHARMACY ================= -->
+      <section class="screen-view" id="screen-medicines">
+        <div class="relative w-full max-w-7xl mx-auto py-6 flex flex-col gap-6">
+          <!-- Top Header Bar -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+            <div>
+              <div class="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-3.5 py-1 rounded-full text-xs font-bold text-emerald-900 mb-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+                <span>PRADHAN MANTRI BHARTIYA JANAUSHADHI PARIYOJANA (PMBJP)</span>
+              </div>
+              <h2 class="font-display font-extrabold text-3xl text-slate-900" data-i18n="janAushadhiKendra">Jan Aushadhi Generic Pharmacy</h2>
+              <p class="text-xs text-slate-600 mt-1" data-i18n="kendraSubhead">
+                High-quality generic medicines at 50% to 90% savings compared to branded commercial formulations.
+              </p>
+            </div>
+
+            <!-- Header Quick Actions -->
+            <div class="flex items-center gap-3">
+              <button onclick="window.ElaraPharmacy.renderCartModal()" class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-md transition-all cursor-pointer">
+                <span class="material-symbols-outlined text-[19px]">shopping_cart</span>
+                <span data-i18n="cart">View Cart</span>
+                <span class="cart-count-badge bg-white text-teal-900 text-[10px] font-black px-2 py-0.5 rounded-full">2</span>
+              </button>
+              <button class="bg-white border border-slate-200 hover:bg-slate-50 px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 cursor-pointer" onclick="goToScreen('order-tracking')">
+                <span data-i18n="orderTracking">Track Order</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Category Filter Tabs & Pharmacy Search -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white border border-slate-200/90 rounded-2xl p-2.5 shadow-2xs">
+            <div class="flex items-center gap-1.5 overflow-x-auto text-xs">
+              <button class="category-filter-btn active px-3.5 py-2 rounded-xl bg-teal-700 text-white font-bold transition-all cursor-pointer" data-cat="all" onclick="window.ElaraPharmacy.setCategory('all')">
+                All
+              </button>
+              <button class="category-filter-btn px-3.5 py-2 rounded-xl bg-white text-slate-700 hover:bg-slate-100 font-semibold transition-all cursor-pointer" data-cat="feverPain" onclick="window.ElaraPharmacy.setCategory('feverPain')">
+                Fever & Pain
+              </button>
+              <button class="category-filter-btn px-3.5 py-2 rounded-xl bg-white text-slate-700 hover:bg-slate-100 font-semibold transition-all cursor-pointer" data-cat="antibiotics" onclick="window.ElaraPharmacy.setCategory('antibiotics')">
+                Antibiotics
+              </button>
+              <button class="category-filter-btn px-3.5 py-2 rounded-xl bg-white text-slate-700 hover:bg-slate-100 font-semibold transition-all cursor-pointer" data-cat="diabetesBp" onclick="window.ElaraPharmacy.setCategory('diabetesBp')">
+                Diabetes & BP
+              </button>
+              <button class="category-filter-btn px-3.5 py-2 rounded-xl bg-white text-slate-700 hover:bg-slate-100 font-semibold transition-all cursor-pointer" data-cat="emergencyKits" onclick="window.ElaraPharmacy.setCategory('emergencyKits')">
+                Emergency Kits
+              </button>
+            </div>
+
+            <div class="relative min-w-[240px]">
+              <input type="text" id="pharmacySearchInput" oninput="window.ElaraPharmacy.setSearch(this.value)" placeholder="Search medicines or salts..." class="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 text-xs bg-slate-50 focus:bg-white focus:border-teal-600 outline-none">
+              <span class="material-symbols-outlined text-[17px] text-slate-400 absolute left-2.5 top-2.5">search</span>
+            </div>
+          </div>
+
+          <!-- Catalog Medicine Cards Grid (Populated by window.ElaraPharmacy.renderCatalogGrid()) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="medicinesGrid">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SCREEN 15: LIVE ORDER TRACKING ================= -->
+      <section class="screen-view" id="screen-order-tracking">
+        <div class="relative w-full max-w-4xl mx-auto py-6 flex flex-col gap-6">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-teal-800 block" data-i18n="orderTracking">PRESCRIPTION ORDER TRACKING</span>
+              <h2 class="font-display font-extrabold text-2xl text-slate-900">Live Delivery Telemetry</h2>
+              <span class="text-xs text-slate-500">Pradhan Mantri Bhartiya Janaushadhi Express Kendrapara Network</span>
+            </div>
+            <button class="bg-white border border-slate-200 hover:bg-slate-50 px-4 py-2 rounded-full text-xs font-semibold text-slate-700 cursor-pointer" onclick="goToScreen('medicines')">
+              ← Jan Aushadhi Pharmacy
+            </button>
+          </div>
+
+          <!-- Active Order Summary Banner -->
+          <div class="bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white rounded-3xl p-6 shadow-md relative overflow-hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <span class="text-xs font-semibold text-teal-200 uppercase tracking-wide">Active Order</span>
+                <h3 class="font-display font-black text-2xl text-white mt-0.5" id="trackingOrderId">ORD-7821</h3>
+                <span class="text-xs text-teal-100/80 block mt-1">Placed on <span id="trackingOrderDate">Today, 07:45 AM</span></span>
+              </div>
+              <div class="text-left sm:text-right">
+                <span class="text-xs font-semibold text-teal-200 uppercase tracking-wide">Estimated Arrival</span>
+                <div class="font-display font-black text-2xl text-emerald-400" id="trackingEta">15-20 mins</div>
+                <span class="text-xs text-teal-100/80 block mt-1" id="trackingOrderStatus">Out for Delivery (Rider nearby)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4-Step Milestone Stepper -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs">
+            <h4 class="font-bold text-sm text-slate-900 mb-6">Delivery Milestone Progress</h4>
+            
+            <div class="grid grid-cols-4 gap-2 text-center relative">
+              <!-- Step 1: Confirmed -->
+              <div class="flex flex-col items-center gap-2">
+                <div id="trackStepDot_1" class="w-10 h-10 rounded-full bg-teal-700 text-white font-black text-sm flex items-center justify-center border-2 border-teal-700 shadow-xs">
+                  ✓
+                </div>
+                <span id="trackStepText_1" class="text-xs font-bold text-teal-900">1. Order Confirmed</span>
+                <span class="text-[10px] text-slate-400">07:45 AM</span>
+              </div>
+
+              <!-- Step 2: Packed -->
+              <div class="flex flex-col items-center gap-2">
+                <div id="trackStepDot_2" class="w-10 h-10 rounded-full bg-teal-700 text-white font-black text-sm flex items-center justify-center border-2 border-teal-700 shadow-xs">
+                  ✓
+                </div>
+                <span id="trackStepText_2" class="text-xs font-bold text-teal-900">2. Packed at Kendra</span>
+                <span class="text-[10px] text-slate-400">08:05 AM</span>
+              </div>
+
+              <!-- Step 3: Out for Delivery (Active) -->
+              <div class="flex flex-col items-center gap-2">
+                <div id="trackStepDot_3" class="w-10 h-10 rounded-full bg-teal-700 text-white font-black text-sm flex items-center justify-center border-2 border-teal-700 shadow-xs animate-bounce">
+                  🛵
+                </div>
+                <span id="trackStepText_3" class="text-xs font-bold text-teal-900">3. Out for Delivery</span>
+                <span class="text-[10px] text-emerald-700 font-bold">In Transit</span>
+              </div>
+
+              <!-- Step 4: Delivered -->
+              <div class="flex flex-col items-center gap-2">
+                <div id="trackStepDot_4" class="w-10 h-10 rounded-full bg-slate-200 text-slate-600 font-black text-sm flex items-center justify-center border-2 border-slate-300">
+                  4
+                </div>
+                <span id="trackStepText_4" class="text-xs font-medium text-slate-500">4. Delivered</span>
+                <span class="text-[10px] text-slate-400">Pending</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Delivery Rider & Map Simulation -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Rider Information -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <span class="text-xs font-bold uppercase tracking-wider text-teal-800">Assigned Delivery Rider</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800">PMBJP Express</span>
+                </div>
+
+                <div class="flex items-center gap-3.5 mt-4">
+                  <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-800 flex items-center justify-center text-xl font-bold shrink-0">
+                    BM
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-sm text-slate-900" id="trackingRiderName">Bikram Mohanty</h4>
+                    <span class="text-xs text-slate-500" id="trackingRiderVehicle">Jan Aushadhi Express #OD-05-9921</span>
+                    <div class="text-[11px] text-teal-800 font-medium mt-0.5">
+                      📍 <span id="trackingRiderLoc">Near Navrangpura PHC Gate 2</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-4 mt-4 border-t border-slate-100 flex items-center gap-3">
+                <button onclick="alert('Calling delivery rider Bikram Mohanty at +91 94370-11223...')" class="flex-1 py-2.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
+                  <span class="material-symbols-outlined text-[17px]">call</span>
+                  <span>Call Rider (+91 94370-11223)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Items In Order -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <span class="text-xs font-bold uppercase tracking-wider text-teal-800">Order Items & Bill</span>
+                  <span class="text-xs font-black text-slate-900" id="trackingOrderTotal">₹48</span>
+                </div>
+
+                <div class="flex flex-col gap-2 mt-3" id="trackingItemsList">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+
+              <div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
+                <span class="text-slate-500">Delivery Charge:</span>
+                <span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">FREE (PMBJP Pariyojana)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SCREEN 16: EMERGENCY 108 ASSISTANCE & SOS ================= -->
+      <section class="screen-view" id="screen-emergency">
+        <div class="relative w-full max-w-4xl mx-auto py-6 flex flex-col gap-6">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-red-700 block">NATIONAL EMERGENCY HEALTHCARE SERVICE</span>
+              <h2 class="font-display font-extrabold text-2xl text-slate-900">Emergency Assistance (108 / 112)</h2>
+              <span class="text-xs text-slate-500">Instant ambulance dispatch to Kendrapara Trauma Centre & PHC network</span>
+            </div>
+            <button class="bg-white border border-slate-200 hover:bg-slate-50 px-4 py-2 rounded-full text-xs font-semibold text-slate-700 cursor-pointer" onclick="goBack()">
+              ← <span data-i18n="back">Back</span>
+            </button>
+          </div>
+
+          <!-- Dispatched Alert Banner (Visible when SOS triggered) -->
+          <div id="sosDispatchedBanner" class="hidden bg-gradient-to-r from-red-600 via-rose-600 to-red-700 text-white p-5 rounded-3xl shadow-lg border-2 border-red-400">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-white text-2xl shrink-0 animate-spin">
+                  🚑
+                </div>
+                <div>
+                  <h3 class="font-display font-extrabold text-lg text-white">Ambulance 108 Dispatched!</h3>
+                  <p class="text-xs text-white/90">Unit #OD-05-EMERG-108 en route with paramedic team</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="text-right">
+                  <span class="text-[10px] text-white/80 uppercase font-bold block">Live ETA</span>
+                  <span class="text-2xl font-black text-amber-300" id="sosEtaText">6 mins</span>
+                </div>
+                <button onclick="window.ElaraEmergency.cancelSos()" class="px-3.5 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs cursor-pointer">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Giant Pulsating SOS Central Button -->
+          <div class="bg-white border-2 border-red-200 rounded-3xl p-8 shadow-sm flex flex-col items-center justify-center text-center">
+            <div class="max-w-md flex flex-col items-center">
+              <span class="text-xs font-bold text-red-600 uppercase tracking-widest mb-4">CRITICAL EMERGENCY PROTOCOL</span>
+              
+              <button id="emergencyMainSosBtn" onclick="window.ElaraEmergency.activateSos()" class="sos-pulse-ring w-44 h-44 rounded-full bg-gradient-to-br from-red-600 via-rose-600 to-red-700 text-white flex flex-col items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                <span class="material-symbols-outlined text-[52px]">emergency</span>
+                <span class="font-display font-black text-2xl tracking-tight mt-1">EMERGENCY SOS</span>
+                <span class="text-[10px] text-white/80 uppercase font-bold mt-0.5">TAP TO DISPATCH 108</span>
+              </button>
+
+              <p class="text-xs text-slate-500 mt-5 leading-relaxed">
+                Pressing this button sounds the local emergency alert siren, transmits your GPS coordinates to Kendrapara District Hospital, and summons the nearest 108 ALS Ambulance.
+              </p>
+            </div>
+
+            <!-- Siren & Direct Call Actions -->
+            <div class="flex items-center gap-3 mt-6 flex-wrap justify-center">
+              <button id="emergencySirenToggleBtn" onclick="window.ElaraEmergency.toggleSiren()" class="px-4 py-2.5 rounded-xl border border-red-300 bg-white hover:bg-red-50 text-red-700 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer">
+                <span class="material-symbols-outlined text-[18px]">volume_up</span>
+                <span>Toggle Emergency Siren</span>
+              </button>
+
+              <button onclick="window.ElaraEmergency.callDirect('108')" class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition-all cursor-pointer">
+                <span class="material-symbols-outlined text-[18px]">phone</span>
+                <span>Call 108 Ambulance Direct</span>
+              </button>
+
+              <button onclick="window.ElaraEmergency.callDirect('112')" class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer">
+                <span class="material-symbols-outlined text-[18px]">shield</span>
+                <span>112 National Helpline</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- GPS Location Display -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-teal-700 text-[22px]">location_on</span>
+              <div>
+                <span class="font-bold text-slate-800" data-i18n="liveGps">Your Live Location:</span>
+                <span class="text-slate-600 ml-1" id="emergencyLiveLocation">Kendrapara Ward 4, Navrangpura, Odisha</span>
+              </div>
+            </div>
+            <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">GPS Active</span>
+          </div>
+
+          <!-- Emergency First Aid Quick Action Guides -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col gap-4">
+            <h3 class="font-display font-bold text-base text-slate-900 flex items-center gap-2">
+              <span class="material-symbols-outlined text-teal-700 text-[20px]">medical_information</span>
+              <span data-i18n="firstAidGuide">Emergency First Aid Quick Guides</span>
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+                <strong class="text-slate-900 block font-bold mb-1">❤️ Chest Pain / Suspected Heart Attack</strong>
+                <p class="text-slate-600 leading-relaxed" data-i18n="chestPainGuide">Keep patient seated and calm. Loosen tight clothing around neck and waist. Do not offer food or heavy water. Administer Sorbitrate/Aspirin only if pre-prescribed by doctor.</p>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+                <strong class="text-slate-900 block font-bold mb-1">🩸 Heavy Bleeding / Trauma</strong>
+                <p class="text-slate-600 leading-relaxed" data-i18n="bleedingGuide">Apply firm continuous pressure directly on wound using clean cloth or sterile gauze. Keep affected limb elevated above heart level if possible.</p>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+                <strong class="text-slate-900 block font-bold mb-1">🐍 Snake Bite Protocol</strong>
+                <p class="text-slate-600 leading-relaxed" data-i18n="snakebiteGuide">Immobilize the bitten limb with a splint. Keep bite site at or below heart level. DO NOT apply tight tourniquets or cut the wound. Transport to PHC immediately for ASV.</p>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+                <strong class="text-slate-900 block font-bold mb-1">☀️ Heat Stroke & Dehydration</strong>
+                <p class="text-slate-600 leading-relaxed">Move patient to cool shaded spot. Fan air and sponge skin with cool water. Sip Jan Aushadhi WHO-standard ORS solution slowly.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SCREEN 17: PATIENT PROFILE & ABHA DIGITAL CARD ================= -->
+      <section class="screen-view" id="screen-profile">
+        <div class="relative w-full max-w-4xl mx-auto py-6 flex flex-col gap-6">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-teal-800 block">AYUSHMAN BHARAT DIGITAL MISSION</span>
+              <h2 class="font-display font-extrabold text-2xl text-slate-900" data-i18n="profile">Patient Profile & ABHA Card</h2>
+              <span class="text-xs text-slate-500">Manage patient demographics, ABHA health records, and emergency contact details</span>
+            </div>
+            <button class="bg-white border border-slate-200 hover:bg-slate-50 px-4 py-2 rounded-full text-xs font-semibold text-slate-700 cursor-pointer" onclick="goBack()">
+              ← <span data-i18n="back">Back</span>
+            </button>
+          </div>
+
+          <!-- Ayushman Bharat ABHA Health Card Preview -->
+          <div class="relative overflow-hidden rounded-[26px] bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white p-6 shadow-md border-2 border-teal-500/30">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/15">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-black text-lg text-white">
+                  🇮🇳
+                </div>
+                <div>
+                  <h3 class="font-display font-black text-lg leading-tight text-white tracking-wide">NATIONAL HEALTH AUTHORITY</h3>
+                  <span class="text-[11px] text-teal-200 font-semibold tracking-wider uppercase">Ayushman Bharat Health Account (ABHA)</span>
+                </div>
+              </div>
+              <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-3 py-1 rounded-full font-bold w-fit">
+                ✓ Verified via NDHM
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 mt-5 items-center">
+              <div class="sm:col-span-8 flex flex-col gap-2">
+                <div>
+                  <span class="text-[10px] text-teal-200 font-semibold uppercase">Patient Full Name</span>
+                  <div class="text-xl font-black text-white" id="abhaCardName">Sunita Devi</div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span class="text-[10px] text-teal-200 uppercase">ABHA ID Number</span>
+                    <strong class="block text-white font-mono text-sm" id="abhaCardId">91-4820-1928-3341</strong>
+                  </div>
+                  <div>
+                    <span class="text-[10px] text-teal-200 uppercase">ABHA Address (PHR)</span>
+                    <strong class="block text-white text-sm" id="abhaCardAddress">sunitadevi@abdm</strong>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 text-xs mt-1">
+                  <div>
+                    <span class="text-[10px] text-teal-200 uppercase">Gender</span>
+                    <strong class="block text-white" id="abhaCardGender">Female</strong>
+                  </div>
+                  <div>
+                    <span class="text-[10px] text-teal-200 uppercase">Blood Group</span>
+                    <strong class="block text-white font-bold text-amber-300" id="abhaCardBlood">B+</strong>
+                  </div>
+                  <div>
+                    <span class="text-[10px] text-teal-200 uppercase">Year of Birth</span>
+                    <strong class="block text-white" id="abhaCardYob">1982</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- QR Code Mock for Clinic Scanner -->
+              <div class="sm:col-span-4 flex flex-col items-center justify-center p-3 bg-white rounded-2xl text-slate-900 shadow-sm">
+                <span class="material-symbols-outlined text-[64px] text-slate-900">qr_code_2</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5">Scan at PHC OPD</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Editable Patient Demographics Form -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col gap-4">
+            <h3 class="font-display font-bold text-base text-slate-900">Edit Patient Demographics & Health Profile</h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="fullName">Full Name *</label>
+                <input type="text" id="profileName" value="Sunita Devi" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 font-medium">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="mobileNumber">10-Digit Mobile Number *</label>
+                <input type="text" id="profilePhone" value="9876543210" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 font-medium">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">ABHA ID Number</label>
+                <input type="text" id="profileAbha" value="91-4820-1928-3341" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 font-medium">
+              </div>
+
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Age</label>
+                  <input type="number" id="profileAge" value="42" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 font-medium">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Blood Group</label>
+                  <select id="profileBloodGroup" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-white font-medium">
+                    <option value="A+">A+</option>
+                    <option value="B+" selected>B+</option>
+                    <option value="O+">O+</option>
+                    <option value="AB+">AB+</option>
+                    <option value="A-">A-</option>
+                    <option value="B-">B-</option>
+                    <option value="O-">O-</option>
+                    <option value="AB-">AB-</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="deliveryAddress">Residential Address & Village/Ward *</label>
+                <input type="text" id="profileAddress" value="Sharda Enclave, Ward 4, Navrangpura, Kendrapara" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 font-medium">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Pincode</label>
+                <input type="text" id="profilePincode" value="754211" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 font-medium">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">State</label>
+                <input type="text" id="profileState" value="Odisha" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 font-medium">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Emergency Contact Person</label>
+                <input type="text" id="profileEmgName" value="Ramesh Devi (Brother)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 font-medium">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Emergency Contact Mobile</label>
+                <input type="text" id="profileEmgPhone" value="9810024156" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 font-medium">
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Known Drug Allergies</label>
+                <input type="text" id="profileAllergies" value="Penicillin, Sulfa Drugs" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 font-medium">
+              </div>
+            </div>
+
+            <!-- Save Action Button -->
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-xs text-slate-500">All updates are encrypted and synced to ABDM Health Registry</span>
+              <button type="button" id="saveProfileBtn" onclick="window.savePatientProfile()" class="px-6 py-3 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-sm transition-all cursor-pointer">
+                Save & Sync Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SCREEN 18: SETTINGS, ACCESSIBILITY & PREFERENCES ================= -->
+      <section class="screen-view" id="screen-settings">
+        <div class="relative w-full max-w-4xl mx-auto py-6 flex flex-col gap-6">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-teal-800 block">SYSTEM CONFIGURATION</span>
+              <h2 class="font-display font-extrabold text-2xl text-slate-900" data-i18n="settings">Settings & Accessibility</h2>
+              <span class="text-xs text-slate-500">Configure multilingual localization, font scaling, high contrast, and notifications</span>
+            </div>
+            <button class="bg-white border border-slate-200 hover:bg-slate-50 px-4 py-2 rounded-full text-xs font-semibold text-slate-700 cursor-pointer" onclick="goBack()">
+              ← <span data-i18n="back">Back</span>
+            </button>
+          </div>
+
+          <!-- Section 1: Multilingual System (All 23 Indian Languages Grid!) -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-display font-bold text-base text-slate-900 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-teal-700 text-[20px]">translate</span>
+                  <span data-i18n="language">Multilingual System (23 Languages)</span>
+                </h3>
+                <p class="text-xs text-slate-500">Instant full application language translation with automatic English fallback</p>
+              </div>
+              <span class="text-xs font-bold px-3 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200" id="settingsCurrentLangBadge">
+                Active: English
+              </span>
+            </div>
+
+            <!-- Complete Grid of 23 Languages -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 text-xs">
+              <button class="lang-btn active p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="en" onclick="setLanguage('en')">
+                <span class="text-base block">🇬🇧</span>
+                <strong class="block text-slate-900">English</strong>
+                <span class="text-[10px] text-slate-500">English</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="hi" onclick="setLanguage('hi')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">हिन्दी</strong>
+                <span class="text-[10px] text-slate-500">Hindi</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="od" onclick="setLanguage('od')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">ଓଡ଼ିଆ</strong>
+                <span class="text-[10px] text-slate-500">Odia</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="bn" onclick="setLanguage('bn')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">বাংলা</strong>
+                <span class="text-[10px] text-slate-500">Bengali</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="as" onclick="setLanguage('as')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">অসমীয়া</strong>
+                <span class="text-[10px] text-slate-500">Assamese</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="gu" onclick="setLanguage('gu')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">ગુજરાતી</strong>
+                <span class="text-[10px] text-slate-500">Gujarati</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="kn" onclick="setLanguage('kn')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">ಕನ್ನಡ</strong>
+                <span class="text-[10px] text-slate-500">Kannada</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="ml" onclick="setLanguage('ml')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">മലയാളം</strong>
+                <span class="text-[10px] text-slate-500">Malayalam</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="mr" onclick="setLanguage('mr')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">मराठी</strong>
+                <span class="text-[10px] text-slate-500">Marathi</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="pa" onclick="setLanguage('pa')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">ਪੰਜਾਬੀ</strong>
+                <span class="text-[10px] text-slate-500">Punjabi</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="ta" onclick="setLanguage('ta')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">தமிழ்</strong>
+                <span class="text-[10px] text-slate-500">Tamil</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="te" onclick="setLanguage('te')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">తెలుగు</strong>
+                <span class="text-[10px] text-slate-500">Telugu</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="ur" onclick="setLanguage('ur')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">اردو</strong>
+                <span class="text-[10px] text-slate-500">Urdu (RTL)</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="sa" onclick="setLanguage('sa')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">संस्कृतम्</strong>
+                <span class="text-[10px] text-slate-500">Sanskrit</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="kok" onclick="setLanguage('kok')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">कोंकणी</strong>
+                <span class="text-[10px] text-slate-500">Konkani</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="mai" onclick="setLanguage('mai')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">मैथिली</strong>
+                <span class="text-[10px] text-slate-500">Maithili</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="mni" onclick="setLanguage('mni')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">মৈতৈলোন্</strong>
+                <span class="text-[10px] text-slate-500">Manipuri</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="ne" onclick="setLanguage('ne')">
+                <span class="text-base block">🇳🇵</span>
+                <strong class="block text-slate-900">नेपाली</strong>
+                <span class="text-[10px] text-slate-500">Nepali</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="sd" onclick="setLanguage('sd')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">سنڌي</strong>
+                <span class="text-[10px] text-slate-500">Sindhi (RTL)</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="ks" onclick="setLanguage('ks')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">کٲشُر</strong>
+                <span class="text-[10px] text-slate-500">Kashmiri</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="doi" onclick="setLanguage('doi')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">डोगरी</strong>
+                <span class="text-[10px] text-slate-500">Dogri</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="brx" onclick="setLanguage('brx')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">बर'</strong>
+                <span class="text-[10px] text-slate-500">Bodo</span>
+              </button>
+
+              <button class="lang-btn p-2.5 rounded-xl border border-slate-200 text-left transition-all cursor-pointer" data-lang="sat" onclick="setLanguage('sat')">
+                <span class="text-base block">🇮🇳</span>
+                <strong class="block text-slate-900">ᱥᱟᱱᱛᱟᱲᱤ</strong>
+                <span class="text-[10px] text-slate-500">Santali</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Section 2: Accessibility & Font Scaling -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col gap-4">
+            <h3 class="font-display font-bold text-base text-slate-900 flex items-center gap-2">
+              <span class="material-symbols-outlined text-teal-700 text-[20px]">accessibility_new</span>
+              <span data-i18n="accessibility">Accessibility & Visual Controls</span>
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Font Scale -->
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                <label class="block text-xs font-bold text-slate-800 mb-2" data-i18n="fontScale">Font Size Adjustment</label>
+                <div class="flex items-center gap-2">
+                  <button class="font-scale-btn flex-1 py-2 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-800 hover:bg-slate-100" onclick="window.ElaraVoice.setFontScale('normal')">
+                    Normal (100%)
+                  </button>
+                  <button class="font-scale-btn flex-1 py-2 rounded-xl border border-slate-300 bg-white text-sm font-bold text-slate-800 hover:bg-slate-100" onclick="window.ElaraVoice.setFontScale('large')">
+                    Large (115%)
+                  </button>
+                  <button class="font-scale-btn flex-1 py-2 rounded-xl border border-slate-300 bg-white text-base font-bold text-slate-800 hover:bg-slate-100" onclick="window.ElaraVoice.setFontScale('xlarge')">
+                    Extra Large
+                  </button>
+                </div>
+              </div>
+
+              <!-- High Contrast Dark Mode -->
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                <div>
+                  <strong class="block text-xs font-bold text-slate-800" data-i18n="highContrast">High Contrast Dark Mode</strong>
+                  <span class="text-[11px] text-slate-500">Enhance readability for visually impaired</span>
+                </div>
+                <button onclick="toggleTheme()" class="px-4 py-2 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 cursor-pointer">
+                  Toggle Mode
+                </button>
+              </div>
+
+              <!-- Voice TTS Speed Slider -->
+              <div class="sm:col-span-2 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                <div class="flex items-center justify-between mb-2">
+                  <label class="text-xs font-bold text-slate-800" data-i18n="ttsSpeed">Voice Speech Playback Speed (TTS)</label>
+                  <span class="text-xs font-mono font-bold text-teal-800" id="ttsSpeedVal">1.0x</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <input type="range" id="ttsSpeedRange" min="0.7" max="1.5" step="0.1" value="1.0" oninput="document.getElementById('ttsSpeedVal').textContent = this.value + 'x'; if(window.ElaraStorage) window.ElaraStorage.setTtsSpeed(parseFloat(this.value));" class="w-full accent-teal-700">
+                  <button onclick="window.ElaraVoice.speak('ELARA clinical triage system is ready in your selected language.')" class="px-3 py-1.5 rounded-lg bg-teal-100 hover:bg-teal-200 text-teal-900 font-bold text-xs shrink-0 cursor-pointer">
+                    Test Voice
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Notification Preferences -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col gap-4">
+            <h3 class="font-display font-bold text-base text-slate-900 flex items-center gap-2">
+              <span class="material-symbols-outlined text-teal-700 text-[20px]">notifications</span>
+              <span data-i18n="notifications">Alerts & Notifications</span>
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <label class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer">
+                <div>
+                  <strong class="block text-slate-900 font-bold" data-i18n="smsAlerts">SMS OPD Tokens & Prescriptions</strong>
+                  <span class="text-slate-500">Sent to registered mobile number</span>
+                </div>
+                <input type="checkbox" id="prefSms" checked class="accent-teal-700 w-4 h-4">
+              </label>
+
+              <label class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer">
+                <div>
+                  <strong class="block text-slate-900 font-bold" data-i18n="whatsappUpdates">WhatsApp Order & Triage Updates</strong>
+                  <span class="text-slate-500">Instant Jan Aushadhi tracking receipts</span>
+                </div>
+                <input type="checkbox" id="prefWhatsapp" checked class="accent-teal-700 w-4 h-4">
+              </label>
+
+              <label class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer">
+                <div>
+                  <strong class="block text-slate-900 font-bold" data-i18n="abdmSync">ABDM Health Locker Automatic Sync</strong>
+                  <span class="text-slate-500">Sync with Ayushman Bharat PHR</span>
+                </div>
+                <input type="checkbox" id="prefAbdm" checked class="accent-teal-700 w-4 h-4">
+              </label>
+
+              <label class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer">
+                <div>
+                  <strong class="block text-slate-900 font-bold" data-i18n="soundAlerts">Critical Siren & Audio Chimes</strong>
+                  <span class="text-slate-500">Audible notification for urgent vitals</span>
+                </div>
+                <input type="checkbox" id="prefSound" checked class="accent-teal-700 w-4 h-4">
+              </label>
+            </div>
+          </div>
+
+          <!-- Section 4: Session & Cache Management -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h4 class="font-bold text-sm text-slate-900">Application Session & Memory</h4>
+              <p class="text-xs text-slate-500">Reset local browser state or sign out of active ABDM session</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="if(confirm('Clear all local app cache and reload?')){ localStorage.clear(); window.location.reload(); }" class="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer">
+                Reset App Cache
+              </button>
+              <button onclick="window.logoutUser()" class="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-sm cursor-pointer" data-i18n="logout">
+                Log Out
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
     </div><!-- /website-main-container -->
+
 
 
     <!-- ================= 2. FIGMA STORYBOARD VIEW CONTAINER ================= -->
@@ -1656,7 +2952,7 @@
         </div>
 
         <div class="board-frame shrink-0 w-80 cursor-pointer" onclick="openScreenFromBoard('ai-processing')">
-          <div class="frame-tag font-bold text-xs text-teal-800 bg-teal-100 px-3 py-1 rounded-md mb-2">5. AI Processing Pipeline</div>
+          <div class="frame-tag font-bold text-xs text-teal-800 bg-teal-100 px-3 py-1 rounded-md mb-2">5. AI Processing Screen</div>
           <div class="frame-preview-box h-[640px] bg-white border border-slate-200 rounded-3xl overflow-y-auto shadow-md" id="sb-preview-ai-processing"></div>
         </div>
 
@@ -1712,79 +3008,261 @@
 
   </main>
 
-  <!-- ================= ARCHITECTURE & PIPELINE DRAWER MODAL ================= -->
-  <div class="modal-backdrop" id="archModal" onclick="closeArchDrawer(event)">
-    <div class="arch-drawer-content" onclick="event.stopPropagation()">
-      <div class="drawer-header bg-slate-50 p-4 border-b border-slate-200 flex items-center justify-between">
+
+
+  <!-- ================= INTERACTIVE MODALS ================= -->
+
+  <!-- 1. MEDICINE DETAIL MODAL -->
+  <div id="medicineDetailModal" class="elara-modal-backdrop hidden" onclick="if(event.target===this) window.ElaraPharmacy.closeDetailModal()">
+    <div class="elara-modal-card p-6 flex flex-col gap-4 max-w-lg">
+      <div class="flex items-start justify-between pb-3 border-b border-slate-100">
         <div>
-          <h3 class="font-display font-bold text-base text-slate-900">ELARA SehatSaarthi Clinical AI & Data Architecture</h3>
-          <p class="text-xs text-slate-500">End-to-end multimodal pipeline from patient voice to doctor referral</p>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-100 uppercase tracking-wider">
+            PMBJP Verified Generic
+          </span>
+          <h3 class="font-display font-extrabold text-lg text-slate-900 mt-1" id="medDetailTitle">Jan Aushadhi Medicine</h3>
+          <p class="text-xs text-slate-500 italic mt-0.5" id="medDetailGeneric">Generic Composition</p>
         </div>
-        <button class="drawer-close-btn text-xl font-bold text-slate-400 hover:text-slate-800" onclick="closeArchDrawer()">&times;</button>
+        <button onclick="window.ElaraPharmacy.closeDetailModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 text-lg font-bold">
+          &times;
+        </button>
       </div>
 
-      <div class="drawer-body p-6 overflow-y-auto flex flex-col gap-4 text-xs">
-        <div class="bg-white border border-slate-200 rounded-2xl p-4">
-          <h4 class="font-bold text-teal-900 text-sm mb-3">1. Patient Journey & Human Review Loop</h4>
-          <div class="arch-flow-diagram flex flex-col items-center gap-2">
-            <div class="flow-node bg-white border border-slate-200 px-4 py-2 rounded-xl font-bold text-slate-800">👤 Patient Intake</div>
-            <div class="flow-arrow text-slate-400 font-bold">↓</div>
-            <div class="flow-node bg-white border border-slate-200 px-4 py-2 rounded-xl text-slate-700">Basic Information & Consent</div>
-            <div class="flow-arrow text-slate-400 font-bold">↓</div>
-            <div class="flow-node highlight bg-teal-50 border border-teal-300 text-teal-950 px-4 py-2 rounded-xl font-bold">Text / 🎤 Voice / 📷 Lab Report</div>
-            <div class="flow-arrow text-slate-400 font-bold">↓</div>
-            <div class="flow-node bg-white border border-slate-200 px-4 py-2 rounded-xl text-slate-700">AI Extracts Symptoms & Vitals</div>
-            <div class="flow-arrow text-slate-400 font-bold">↓</div>
-            <div class="flow-node alert bg-amber-50 border border-amber-300 text-amber-950 px-4 py-2 rounded-xl font-bold">⚠️ Missing Information Identified</div>
-            <div class="flow-arrow text-slate-400 font-bold">↓</div>
-            <div class="flow-node bg-white border border-slate-200 px-4 py-2 rounded-xl text-slate-700">Structured Triage Note & Urgency Matrix</div>
-            <div class="flow-arrow text-slate-400 font-bold">↓</div>
-            <div class="flow-node human bg-emerald-50 border border-emerald-300 text-emerald-950 px-4 py-2 rounded-xl font-bold">👩⚕️ HUMAN HEALTHCARE WORKER REVIEW</div>
+      <!-- Pricing & Savings Comparison -->
+      <div class="bg-teal-50/70 border border-teal-200/80 rounded-2xl p-4 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] text-teal-800 font-bold uppercase block" data-i18n="mrp">Jan Aushadhi Price</span>
+          <span class="font-black text-2xl text-teal-950" id="medDetailPrice">₹12</span>
+        </div>
+        <div class="text-right">
+          <span class="text-[10px] text-slate-500 line-through block" id="medDetailMrp">Commercial MRP: ₹38</span>
+          <span class="text-xs font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full" id="medDetailSavings">68% Savings</span>
+        </div>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-700">
+        <div>
+          <strong class="text-slate-900 block font-bold mb-0.5">Therapeutic Uses:</strong>
+          <p id="medDetailUses" class="text-slate-600 leading-relaxed"></p>
+        </div>
+
+        <div>
+          <strong class="text-slate-900 block font-bold mb-0.5">Standard Adult Dosage:</strong>
+          <p id="medDetailDosage" class="text-slate-600 leading-relaxed"></p>
+        </div>
+
+        <div>
+          <strong class="text-slate-900 block font-bold mb-0.5">Manufacturer & Supply Kendra:</strong>
+          <p id="medDetailMfg" class="text-slate-500"></p>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex items-center gap-3">
+        <button id="medDetailAddBtn" class="flex-1 py-3 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+          <span data-i18n="addToCart">Add to Jan Aushadhi Cart</span>
+        </button>
+        <button onclick="window.ElaraPharmacy.closeDetailModal()" class="px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. CART SLIDE-OVER / MODAL -->
+  <div id="cartModal" class="elara-modal-backdrop hidden" onclick="if(event.target===this) window.ElaraPharmacy.closeCartModal()">
+    <div class="elara-modal-card p-6 flex flex-col gap-4 max-w-lg">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-teal-700 text-[22px]">shopping_cart</span>
+          <h3 class="font-display font-extrabold text-base text-slate-900" data-i18n="janAushadhiKendra">Jan Aushadhi Prescription Cart</h3>
+        </div>
+        <button onclick="window.ElaraPharmacy.closeCartModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 text-lg font-bold">
+          &times;
+        </button>
+      </div>
+
+      <!-- Items List -->
+      <div id="cartItemsContainer" class="max-h-64 overflow-y-auto pr-1">
+        <!-- Dynamically rendered -->
+      </div>
+
+      <!-- Totals & Savings -->
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-2 text-xs">
+        <div class="flex justify-between text-slate-600">
+          <span>Subtotal (Jan Aushadhi MRP):</span>
+          <b class="text-slate-900" id="cartSubtotal">₹0</b>
+        </div>
+        <div class="flex justify-between text-slate-400 text-[11px]">
+          <span>Branded Commercial Equivalent:</span>
+          <span class="line-through" id="cartCommercialTotal">₹0</span>
+        </div>
+        <div class="flex justify-between text-emerald-700 font-bold">
+          <span>Your Total Savings:</span>
+          <span id="cartSavingsBadge">₹0 (0%)</span>
+        </div>
+        <div class="flex justify-between text-teal-800 text-[11px] pt-1 border-t border-slate-200">
+          <span>Delivery Charges:</span>
+          <span class="font-bold text-emerald-600">FREE PMBJP Express</span>
+        </div>
+      </div>
+
+      <!-- Checkout Action -->
+      <div class="pt-2 flex items-center gap-3">
+        <button onclick="window.ElaraPharmacy.openCheckoutModal()" class="flex-1 py-3.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer">
+          <span data-i18n="checkout">Proceed to Checkout</span>
+          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </button>
+        <button onclick="window.ElaraPharmacy.closeCartModal()" class="px-4 py-3.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs">
+          Continue Shopping
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. CHECKOUT MODAL WITH FORM VALIDATION -->
+  <div id="checkoutModal" class="elara-modal-backdrop hidden" onclick="if(event.target===this) window.ElaraPharmacy.closeCheckoutModal()">
+    <div class="elara-modal-card p-6 flex flex-col gap-4 max-w-lg">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-teal-700 text-[22px]">local_shipping</span>
+          <h3 class="font-display font-extrabold text-base text-slate-900">Jan Aushadhi Order Checkout</h3>
+        </div>
+        <button onclick="window.ElaraPharmacy.closeCheckoutModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 text-lg font-bold">
+          &times;
+        </button>
+      </div>
+
+      <form id="checkoutForm" onsubmit="window.ElaraPharmacy.processOrderSubmission(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" data-i18n="fullName">Recipient Full Name *</label>
+          <input type="text" id="checkoutName" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:border-teal-600 outline-none">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" data-i18n="mobileNumber">10-Digit Mobile Number *</label>
+          <input type="tel" id="checkoutPhone" required placeholder="9876543210" pattern="^[6-9]\d{9}$" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:border-teal-600 outline-none">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" data-i18n="deliveryAddress">Delivery Address & Ward *</label>
+          <textarea id="checkoutAddress" required rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:border-teal-600 outline-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1.5">Payment Method</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 flex flex-col items-center justify-center text-center cursor-pointer hover:border-teal-600">
+              <input type="radio" name="paymentMode" value="cod" checked class="accent-teal-700 mb-1">
+              <span class="font-bold text-[11px] text-slate-800">Cash on Delivery</span>
+            </label>
+            <label class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 flex flex-col items-center justify-center text-center cursor-pointer hover:border-teal-600">
+              <input type="radio" name="paymentMode" value="abdm" class="accent-teal-700 mb-1">
+              <span class="font-bold text-[11px] text-slate-800">Ayushman Card</span>
+            </label>
+            <label class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 flex flex-col items-center justify-center text-center cursor-pointer hover:border-teal-600">
+              <input type="radio" name="paymentMode" value="upi" class="accent-teal-700 mb-1">
+              <span class="font-bold text-[11px] text-slate-800">UPI / QR</span>
+            </label>
           </div>
         </div>
 
-        <div class="bg-white border border-slate-200 rounded-2xl p-4">
-          <h4 class="font-bold text-teal-900 text-sm mb-3">2. Voice AI & Clinical Triage Engine Architecture</h4>
-          <div class="flex items-center justify-between gap-2 overflow-x-auto py-2 text-center">
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl min-w-[100px]">
-              <span class="material-symbols-outlined text-teal-700 text-[24px]">mic</span>
-              <strong class="block text-slate-900 text-xs mt-1">Patient Voice</strong>
-              <span class="text-[10px] text-slate-500">HI / OD / EN</span>
-            </div>
-            <span class="font-bold text-slate-400">→</span>
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl min-w-[100px]">
-              <span class="material-symbols-outlined text-teal-700 text-[24px]">speech_to_text</span>
-              <strong class="block text-slate-900 text-xs mt-1">Whisper STT</strong>
-              <span class="text-[10px] text-slate-500">Acoustic Model</span>
-            </div>
-            <span class="font-bold text-slate-400">→</span>
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl min-w-[100px]">
-              <span class="material-symbols-outlined text-teal-700 text-[24px]">translate</span>
-              <strong class="block text-slate-900 text-xs mt-1">IndicTrans2</strong>
-              <span class="text-[10px] text-slate-500">Clinical Terms</span>
-            </div>
-            <span class="font-bold text-slate-400">→</span>
-            <div class="p-3 bg-teal-50 border border-teal-300 rounded-xl min-w-[100px]">
-              <span class="material-symbols-outlined text-teal-800 text-[24px]">psychology</span>
-              <strong class="block text-teal-950 text-xs mt-1">Triage Engine</strong>
-              <span class="text-[10px] text-teal-800">Red-Flag Scan</span>
-            </div>
-            <span class="font-bold text-slate-400">→</span>
-            <div class="p-3 bg-emerald-50 border border-emerald-300 rounded-xl min-w-[100px]">
-              <span class="material-symbols-outlined text-emerald-800 text-[24px]">clinical_notes</span>
-              <strong class="block text-emerald-950 text-xs mt-1">Sister Priya</strong>
-              <span class="text-[10px] text-emerald-800">Nurse Review</span>
-            </div>
+        <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <span class="text-slate-500 block text-[11px]" data-i18n="totalAmount">Total Payable</span>
+            <span class="font-black text-lg text-teal-900" id="checkoutTotalPayable">₹48</span>
           </div>
+          <button type="submit" id="submitOrderBtn" class="px-6 py-3 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-md transition-all cursor-pointer">
+            <span data-i18n="placeOrder">Confirm & Place Order</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. PATIENT SIGN UP REGISTRATION MODAL -->
+  <div id="signUpModal" class="elara-modal-backdrop hidden" onclick="if(event.target===this) window.closeSignUpModal()">
+    <div class="elara-modal-card p-6 flex flex-col gap-4 max-w-md">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="font-display font-extrabold text-base text-slate-900" data-i18n="createAccount">Create Patient Account</h3>
+          <p class="text-xs text-slate-500" data-i18n="createAccountSub">Register for digital OPD triage & prescription records</p>
+        </div>
+        <button onclick="window.closeSignUpModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 text-lg font-bold">
+          &times;
+        </button>
+      </div>
+
+      <form id="signUpForm" onsubmit="window.handleSignUpSubmit(event)" class="space-y-3 text-xs">
+        <div id="signUpError" class="hidden p-2.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-semibold"></div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" data-i18n="fullName">Full Name *</label>
+          <input type="text" id="signUpName" required placeholder="e.g. Ramesh Kumar" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:border-teal-600 outline-none">
         </div>
 
-        <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-2">
-          <h4 class="font-bold text-teal-900 text-sm">3. Compliance, Ethics & Safety Standards</h4>
-          <p class="text-slate-700">• <b>ABDM Milestone 3 Compliant:</b> Integrates with ABHA Health ID, HIP/HIU consent manager, and FHIR clinical note schemas.</p>
-          <p class="text-slate-700">• <b>Clinical Decision Support:</b> In compliance with Indian CDSCO & FDA SaMD guidelines, ELARA acts strictly as a clinical decision support tool, not diagnostic therapeutics.</p>
-          <p class="text-slate-700">• <b>Zero Data Selling:</b> Patient audio and reports are processed in zero-retention memory with encrypted audit logs.</p>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" data-i18n="mobileNumber">10-Digit Mobile Number *</label>
+          <input type="tel" id="signUpPhone" required placeholder="e.g. 9812345678" pattern="^[6-9]\d{9}$" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:border-teal-600 outline-none">
         </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ABHA ID Number (Optional)</label>
+          <input type="text" id="signUpAbha" placeholder="14-digit ABHA (auto-created if blank)" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:border-teal-600 outline-none">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" data-i18n="password">Create Password / PIN *</label>
+          <input type="password" id="signUpPassword" required minlength="4" placeholder="At least 4 characters" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:border-teal-600 outline-none">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" data-i18n="confirmPassword">Confirm Password *</label>
+          <input type="password" id="signUpConfirmPassword" required minlength="4" placeholder="Repeat password" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:border-teal-600 outline-none">
+        </div>
+
+        <button type="submit" id="signUpSubmitBtn" class="w-full py-3 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-md transition-all cursor-pointer mt-2">
+          Register & Continue to Triage
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. FORGOT PASSWORD MODAL -->
+  <div id="forgotPasswordModal" class="elara-modal-backdrop hidden" onclick="if(event.target===this) window.closeForgotPasswordModal()">
+    <div class="elara-modal-card p-6 flex flex-col gap-4 max-w-md">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="font-display font-extrabold text-base text-slate-900" data-i18n="resetPasswordTitle">Reset Password</h3>
+          <p class="text-xs text-slate-500" data-i18n="resetPasswordSub">Enter OTP sent to your registered mobile number</p>
+        </div>
+        <button onclick="window.closeForgotPasswordModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 text-lg font-bold">
+          &times;
+        </button>
       </div>
+
+      <form id="forgotPasswordForm" onsubmit="window.handleForgotPasswordSubmit(event)" class="space-y-3 text-xs">
+        <div id="forgotError" class="hidden p-2.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-semibold"></div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" data-i18n="mobileNumber">Registered Mobile Number *</label>
+          <input type="tel" id="forgotPhone" required value="9876543210" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:border-teal-600 outline-none">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" data-i18n="enterOtp">4-Digit Demo OTP (Enter: 1234) *</label>
+          <input type="text" id="forgotOtp" required value="1234" maxlength="4" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold text-center tracking-widest focus:border-teal-600 outline-none">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" data-i18n="newPassword">New Password *</label>
+          <input type="password" id="forgotNewPassword" required minlength="4" placeholder="Enter new password" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:border-teal-600 outline-none">
+        </div>
+
+        <button type="submit" id="forgotSubmitBtn" class="w-full py-3 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-md transition-all cursor-pointer mt-2" data-i18n="resetBtn">
+          Reset Password & Login
+        </button>
+      </form>
     </div>
   </div>
 
@@ -1794,10 +3272,17 @@
     <span class="toast-message" id="toastMsg">Action completed successfully</span>
   </div>
 
-  <!-- SCRIPT FILES -->
+  <!-- SCRIPT FILES (Modular Architecture) -->
+  <script src="js/storage.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/voice.js"></script>
+  <script src="js/medicines.js"></script>
+  <script src="js/emergency.js"></script>
   <script src="js/data.js"></script>
   <script src="js/audio-sim.js"></script>
   <script src="js/triage-engine.js"></script>
   <script src="js/app.js"></script>
+
 </body>
 </html>

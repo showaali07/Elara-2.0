@@ -8,7 +8,7 @@ ELARA 2.0 is an intelligent, multimodal clinical triage assistant designed for p
 ## 🌟 Key Features
 
 - **Multimodal Patient Intake**:
-  - 🎤 **Voice-First Triage**: Real-time microphone audio recording, Web Audio API frequency waveform visualizer, and simulated Whisper/Vani Speech-to-Text in Hindi, Odia, and English.
+  - 📋 **Normal Clinical Triage**: Guided patient symptom intake, real-time microphone audio recording, Web Audio API frequency waveform visualizer, and simulated Whisper/Vani Speech-to-Text in Hindi, Odia, and English.
   - 📝 **Interactive Form**: Guided symptom chips (*Fever with Chills*, *Throbbing Headache*, *Shortness of breath*) and duration selectors.
   - 📄 **Lab Report OCR**: Extracts lab values from CBC (Hemoglobin, WBC, Platelets) and Dengue Serology reports with verification alerts.
 - **Explainable AI Pipeline**:
