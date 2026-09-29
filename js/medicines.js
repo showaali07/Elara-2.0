@@ -381,6 +381,7 @@
       if (dosageEl) dosageEl.textContent = med.dosage;
       if (mfgEl) mfgEl.textContent = `${med.manufacturer} (${med.form})`;
       
+      this.currentDetailId = med.id;
       if (addBtn) {
         addBtn.onclick = () => {
           this.addToCart(med.id, 1);
@@ -391,6 +392,13 @@
       if (modal) {
         modal.classList.remove("hidden");
         if (window.ElaraI18n) window.ElaraI18n.applyToDOM(modal);
+      }
+    }
+
+    addCurrentDetailToCart() {
+      if (this.currentDetailId) {
+        this.addToCart(this.currentDetailId, 1);
+        this.closeDetailModal();
       }
     }
 

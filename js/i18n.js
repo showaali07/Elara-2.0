@@ -1246,7 +1246,16 @@
 
   // Master Direct English -> Hindi Translation Dictionary (Audit Verified)
     const HINDI_TEXT_MAP = {
-    "17": "१७",
+      "13. Search": "१३. खोजें",
+      "14. Pharmacy": "१४. जन औषधि फार्मेसी",
+      "15. Order Tracking": "१५. ऑर्डर ट्रैकिंग",
+      "16. Emergency SOS": "१६. आपातकालीन एसओएस",
+      "17. Profile & ABHA": "१७. प्रोफाइल और आभा कार्ड",
+      "18. Settings": "१८. सेटिंग्स और सुगमता",
+      "Simulate Delivery Completion": "डिलीवरी पूर्णता का अनुकरण करें",
+      "Copy ID": "आईडी कॉपी करें",
+      "Print Card": "कार्ड प्रिंट करें",
+      "17": "१७",
     "ELARA 2.0 | Multimodal AI Healthcare Triage Assistant": "एलारा २.० | मल्टीमॉडल एआई स्वास्थ्य सेवा ट्राइएज सहायक",
     "ELARA 2.0": "एलारा २.०",
     "ELARA": "एलारा",

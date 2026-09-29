@@ -1,0 +1,959 @@
+{
+  "screens": {
+    "screen-splash": {
+      "buttonCount": 11,
+      "buttons": [
+        {
+          "text": "person Patient / Citizen",
+          "onclick": "setLoginRole(",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "text": "stethoscope Healthcare Giver",
+          "onclick": "setLoginRole(",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "text": "admin_panel_settings Facility Admin",
+          "onclick": "setLoginRole(",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "text": "Verify",
+          "onclick": "showToast(",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "text": "Forgot Password?",
+          "onclick": "window.openForgotPasswordModal()",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "text": "Sign In as Patient & Continue to Triage arrow_forw",
+          "onclick": "loginAsPatient()",
+          "id": "patientLoginSubmitBtn",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "text": "Register Now (ABHA / Mobile)",
+          "onclick": "window.openSignUpModal()",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "text": "bolt 1-Click Interactive Demo (Sunita Devi • Sever",
+          "onclick": "quickFillDemoPatient()",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "text": "clinical_notes Sign In to Nurse Work Station (Queu",
+          "onclick": "loginAsNurse()",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "text": "login 1-Click Fast Nurse Login (Sister Priya Sharm",
+          "onclick": "loginAsNurse()",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "text": "verified Sign In as Facility Admin (Dr. Roy)",
+          "onclick": "loginAsAdmin()",
+          "disabled": false,
+          "type": "button"
+        }
+      ],
+      "selects": [
+        {
+          "id": "patientIntakeLanguage",
+          "onchange": "setLanguage(this.value)",
+          "options": [
+            "Hindi (हिंदी - Regional Dialects Supported)",
+            "Odia (ଓଡ଼ିଆ - Sambalpuri / Coastal)",
+            "Bengali (বাংলা)",
+            "Telugu (తెలుగు)",
+            "English (Standard Medical)"
+          ]
+        },
+        {
+          "id": "nurseWorkstationSelect",
+          "onchange": "window.setNurseWorkstation(this.value)",
+          "options": [
+            "OPD Triage Station 1",
+            "Emergency Screening Room",
+            "Inpatient Ward Bed 1-12"
+          ]
+        }
+      ],
+      "inputs": [
+        {
+          "type": "text",
+          "id": "authInput",
+          "placeholder": "Enter 14-digit ABHA or 10-digit mobile"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "password",
+          "id": "patientLoginPassword",
+          "placeholder": "Enter your 6-digit PIN or password"
+        },
+        {
+          "type": "checkbox",
+          "id": "patientLoginConsent"
+        },
+        {
+          "type": "text",
+          "placeholder": "e.g. NR-2024-DEL-8941"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "password"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "password"
+        }
+      ]
+    },
+    "screen-role-select": {
+      "buttonCount": 3,
+      "buttons": [
+        {
+          "text": "← Return Home",
+          "onclick": "goToScreen(",
+          "disabled": false
+        },
+        {
+          "text": "Request Callback",
+          "onclick": "window.requestTollFreeCallback()",
+          "disabled": false
+        },
+        {
+          "text": "Send OTP & Continue →",
+          "onclick": "proceedFromRoleSelect()",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": [
+        {
+          "type": "text",
+          "id": "authInput"
+        }
+      ]
+    },
+    "screen-consent": {
+      "buttonCount": 2,
+      "buttons": [
+        {
+          "text": "Give Consent & Continue to Triage",
+          "onclick": "grantConsentAndContinue()",
+          "disabled": false
+        },
+        {
+          "text": "Cancel & Return",
+          "onclick": "goToScreen(",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": [
+        {
+          "type": "checkbox",
+          "id": "consentCheckbox"
+        }
+      ]
+    },
+    "screen-patient-home": {
+      "buttonCount": 6,
+      "buttons": [
+        {
+          "text": "EN",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "हिं",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "ଓଡ଼ି",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "clinical_notes Start Normal Triage",
+          "onclick": "startTriageMethod(",
+          "disabled": false
+        },
+        {
+          "text": "Continue Triage →",
+          "onclick": "goToScreen(",
+          "disabled": false
+        },
+        {
+          "text": "View",
+          "onclick": "goToScreen(",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": []
+    },
+    "screen-multimodal-input": {
+      "buttonCount": 14,
+      "buttons": [
+        {
+          "text": "clinical_notes Normal Triage",
+          "onclick": "switchInputTab(",
+          "id": "tabBtnVoice",
+          "disabled": false
+        },
+        {
+          "text": "keyboard Text Narrative",
+          "onclick": "switchInputTab(",
+          "id": "tabBtnText",
+          "disabled": false
+        },
+        {
+          "text": "document_scanner Lab Report OCR",
+          "onclick": "switchInputTab(",
+          "id": "tabBtnReport",
+          "disabled": false
+        },
+        {
+          "text": "Reset",
+          "onclick": "resetDemoInputs()",
+          "disabled": false
+        },
+        {
+          "text": "mic Tap to Record",
+          "onclick": "toggleVoiceRecording()",
+          "id": "mainMicBtn",
+          "disabled": false
+        },
+        {
+          "text": "🔴 Sunita: High Fever & Headache (Hindi)",
+          "onclick": "loadVoicePreset(",
+          "disabled": false
+        },
+        {
+          "text": "🔴 Amit: Chest Tightness (English)",
+          "onclick": "loadVoicePreset(",
+          "disabled": false
+        },
+        {
+          "text": "🟡 Anita: Knee joint swelling (Odia)",
+          "onclick": "loadVoicePreset(",
+          "disabled": false
+        },
+        {
+          "text": "🌡️ Fever with Chills",
+          "onclick": "toggleSymptomChip(this, ",
+          "disabled": false
+        },
+        {
+          "text": "🤕 Throbbing Headache",
+          "onclick": "toggleSymptomChip(this, ",
+          "disabled": false
+        },
+        {
+          "text": "💪 Body Ache",
+          "onclick": "toggleSymptomChip(this, ",
+          "disabled": false
+        },
+        {
+          "text": "😷 Cough",
+          "onclick": "toggleSymptomChip(this, ",
+          "disabled": false
+        },
+        {
+          "text": "🤢 Nausea",
+          "onclick": "toggleSymptomChip(this, ",
+          "disabled": false
+        },
+        {
+          "text": "Process Symptoms with AI ✨ arrow_forward",
+          "onclick": "startAIProcessingPipeline()",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": []
+    },
+    "screen-ai-processing": {
+      "buttonCount": 1,
+      "buttons": [
+        {
+          "text": "Cancel & Edit Inputs",
+          "onclick": "goToScreen(",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": []
+    },
+    "screen-symptom-summary": {
+      "buttonCount": 5,
+      "buttons": [
+        {
+          "text": "← Add More Inputs",
+          "onclick": "goToScreen(",
+          "disabled": false
+        },
+        {
+          "text": "+ Add (102.4°F)",
+          "onclick": "resolveMissingInfo(",
+          "id": "btnAddTemp",
+          "disabled": false
+        },
+        {
+          "text": "+ Add (Paracetamol)",
+          "onclick": "resolveMissingInfo(",
+          "id": "btnAddMed",
+          "disabled": false
+        },
+        {
+          "text": "+ Confirm None",
+          "onclick": "resolveMissingInfo(",
+          "id": "btnAddFlags",
+          "disabled": false
+        },
+        {
+          "text": "Generate Triage Note 📋 arrow_forward",
+          "onclick": "goToScreen(",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": []
+    },
+    "screen-triage-summary": {
+      "buttonCount": 1,
+      "buttons": [
+        {
+          "text": "Send for Healthcare Worker Review 🚀",
+          "onclick": "sendToHealthcareWorker()",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": []
+    },
+    "screen-hw-dashboard": {
+      "buttonCount": 5,
+      "buttons": [
+        {
+          "text": "sync Sync ABDM Queue",
+          "onclick": "refreshQueue()",
+          "disabled": false
+        },
+        {
+          "text": "All Patients (28)",
+          "onclick": "filterQueue(",
+          "disabled": false
+        },
+        {
+          "text": "🔴 Urgent (3)",
+          "onclick": "filterQueue(",
+          "disabled": false
+        },
+        {
+          "text": "🟡 Priority (8)",
+          "onclick": "filterQueue(",
+          "disabled": false
+        },
+        {
+          "text": "🟢 Routine (17)",
+          "onclick": "filterQueue(",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": []
+    },
+    "screen-hw-review": {
+      "buttonCount": 5,
+      "buttons": [
+        {
+          "text": "← Return to Queue",
+          "onclick": "goToScreen(",
+          "disabled": false
+        },
+        {
+          "text": "+ Vitals Normal",
+          "onclick": "appendNote(",
+          "disabled": false
+        },
+        {
+          "text": "+ Order Rapid Kit",
+          "onclick": "appendNote(",
+          "disabled": false
+        },
+        {
+          "text": "Refer to Doctor / Specialist →",
+          "onclick": "goToScreen(",
+          "disabled": false
+        },
+        {
+          "text": "Send to General OPD",
+          "onclick": "completeRoutineQueue()",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": [
+        {
+          "type": "radio",
+          "name": "hwDecision"
+        },
+        {
+          "type": "radio",
+          "name": "hwDecision"
+        },
+        {
+          "type": "radio",
+          "name": "hwDecision"
+        }
+      ]
+    },
+    "screen-referral-prep": {
+      "buttonCount": 1,
+      "buttons": [
+        {
+          "text": "Send Referral 📨",
+          "onclick": "sendReferralNow()",
+          "disabled": false
+        }
+      ],
+      "selects": [
+        {
+          "id": "referralDept",
+          "options": [
+            "👨⚕️ Duty Medical Officer: Dr. Ananya Roy (Room 104)",
+            "🩺 Internal Medicine Specialist (District Hospital)",
+            "🦟 Infectious Disease / Fever Clinic"
+          ]
+        }
+      ],
+      "inputs": [
+        {
+          "type": "checkbox"
+        },
+        {
+          "type": "checkbox"
+        },
+        {
+          "type": "checkbox"
+        },
+        {
+          "type": "checkbox"
+        }
+      ]
+    },
+    "screen-facility-admin": {
+      "buttonCount": 1,
+      "buttons": [
+        {
+          "text": "file_download Export ABDM Report",
+          "onclick": "exportFacilityReport()",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": []
+    },
+    "screen-search": {
+      "buttonCount": 12,
+      "buttons": [
+        {
+          "text": "← Back",
+          "onclick": "goBack()",
+          "disabled": false
+        },
+        {
+          "text": "window.performSearch(q))\" title=\"Voice Search (Spe",
+          "onclick": "window.ElaraVoice.startListening(",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "text": "close",
+          "onclick": "document.getElementById(",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "text": "All",
+          "onclick": "window.filterSearch(",
+          "disabled": false
+        },
+        {
+          "text": "Medicines",
+          "onclick": "window.filterSearch(",
+          "disabled": false
+        },
+        {
+          "text": "Symptoms",
+          "onclick": "window.filterSearch(",
+          "disabled": false
+        },
+        {
+          "text": "Orders",
+          "onclick": "window.filterSearch(",
+          "disabled": false
+        },
+        {
+          "text": "💊 Paracetamol 650mg",
+          "onclick": "window.setSearchQuery(",
+          "disabled": false
+        },
+        {
+          "text": "💧 ORS Electrolyte",
+          "onclick": "window.setSearchQuery(",
+          "disabled": false
+        },
+        {
+          "text": "🌡️ High Fever",
+          "onclick": "window.setSearchQuery(",
+          "disabled": false
+        },
+        {
+          "text": "💊 Amoxicillin",
+          "onclick": "window.setSearchQuery(",
+          "disabled": false
+        },
+        {
+          "text": "📦 Order #ORD-7821",
+          "onclick": "window.setSearchQuery(",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": [
+        {
+          "type": "text",
+          "id": "searchQueryInput",
+          "placeholder": "Search medicines (e.g. Paracetamol), symptoms, clinics, or orders...",
+          "oninput": "window.performSearch(this.value)"
+        }
+      ]
+    },
+    "screen-medicines": {
+      "buttonCount": 7,
+      "buttons": [
+        {
+          "text": "shopping_cart View Cart 2",
+          "onclick": "window.ElaraPharmacy.renderCartModal()",
+          "disabled": false
+        },
+        {
+          "text": "Track Order",
+          "onclick": "goToScreen(",
+          "disabled": false
+        },
+        {
+          "text": "All",
+          "onclick": "window.ElaraPharmacy.setCategory(",
+          "disabled": false
+        },
+        {
+          "text": "Fever & Pain",
+          "onclick": "window.ElaraPharmacy.setCategory(",
+          "disabled": false
+        },
+        {
+          "text": "Antibiotics",
+          "onclick": "window.ElaraPharmacy.setCategory(",
+          "disabled": false
+        },
+        {
+          "text": "Diabetes & BP",
+          "onclick": "window.ElaraPharmacy.setCategory(",
+          "disabled": false
+        },
+        {
+          "text": "Emergency Kits",
+          "onclick": "window.ElaraPharmacy.setCategory(",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": [
+        {
+          "type": "text",
+          "id": "pharmacySearchInput",
+          "placeholder": "Search medicines or salts...",
+          "oninput": "window.ElaraPharmacy.setSearch(this.value)"
+        }
+      ]
+    },
+    "screen-order-tracking": {
+      "buttonCount": 3,
+      "buttons": [
+        {
+          "text": "← Jan Aushadhi Pharmacy",
+          "onclick": "goToScreen(",
+          "disabled": false
+        },
+        {
+          "text": "call Call Rider (+91 94370-11223)",
+          "onclick": "window.callRider(",
+          "disabled": false
+        },
+        {
+          "text": "check_circle Simulate Delivery Completion",
+          "onclick": "window.advanceDeliveryStep()",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": []
+    },
+    "screen-emergency": {
+      "buttonCount": 6,
+      "buttons": [
+        {
+          "text": "← Back",
+          "onclick": "goBack()",
+          "disabled": false
+        },
+        {
+          "text": "Cancel",
+          "onclick": "window.ElaraEmergency.cancelSos()",
+          "disabled": false
+        },
+        {
+          "text": "emergency EMERGENCY SOS TAP TO DISPATCH 108",
+          "onclick": "window.ElaraEmergency.activateSos()",
+          "id": "emergencyMainSosBtn",
+          "disabled": false
+        },
+        {
+          "text": "volume_up Toggle Emergency Siren",
+          "onclick": "window.ElaraEmergency.toggleSiren()",
+          "id": "emergencySirenToggleBtn",
+          "disabled": false
+        },
+        {
+          "text": "phone Call 108 Ambulance Direct",
+          "onclick": "window.ElaraEmergency.callDirect(",
+          "disabled": false
+        },
+        {
+          "text": "shield 112 National Helpline",
+          "onclick": "window.ElaraEmergency.callDirect(",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": []
+    },
+    "screen-profile": {
+      "buttonCount": 4,
+      "buttons": [
+        {
+          "text": "← Back",
+          "onclick": "goBack()",
+          "disabled": false
+        },
+        {
+          "text": "content_copy Copy ID",
+          "onclick": "window.copyAbhaId()",
+          "disabled": false
+        },
+        {
+          "text": "print Print Card",
+          "onclick": "window.downloadAbhaCard()",
+          "disabled": false
+        },
+        {
+          "text": "Save & Sync Profile",
+          "onclick": "window.savePatientProfile()",
+          "id": "saveProfileBtn",
+          "disabled": false,
+          "type": "button"
+        }
+      ],
+      "selects": [
+        {
+          "id": "profileBloodGroup",
+          "options": [
+            "A+",
+            "B+",
+            "O+",
+            "AB+",
+            "A-",
+            "B-",
+            "O-",
+            "AB-"
+          ]
+        }
+      ],
+      "inputs": [
+        {
+          "type": "text",
+          "id": "profileName"
+        },
+        {
+          "type": "text",
+          "id": "profilePhone"
+        },
+        {
+          "type": "text",
+          "id": "profileAbha"
+        },
+        {
+          "type": "number",
+          "id": "profileAge"
+        },
+        {
+          "type": "text",
+          "id": "profileAddress"
+        },
+        {
+          "type": "text",
+          "id": "profilePincode"
+        },
+        {
+          "type": "text",
+          "id": "profileState"
+        },
+        {
+          "type": "text",
+          "id": "profileEmgName"
+        },
+        {
+          "type": "text",
+          "id": "profileEmgPhone"
+        },
+        {
+          "type": "text",
+          "id": "profileAllergies"
+        }
+      ]
+    },
+    "screen-settings": {
+      "buttonCount": 31,
+      "buttons": [
+        {
+          "text": "← Back",
+          "onclick": "goBack()",
+          "disabled": false
+        },
+        {
+          "text": "🇬🇧 English English",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 हिन्दी Hindi",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 ଓଡ଼ିଆ Odia",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 বাংলা Bengali",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 অসমীয়া Assamese",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 ગુજરાતી Gujarati",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 ಕನ್ನಡ Kannada",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 മലയാളം Malayalam",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 मराठी Marathi",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 ਪੰਜਾਬੀ Punjabi",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 தமிழ் Tamil",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 తెలుగు Telugu",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 اردو Urdu (RTL)",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 संस्कृतम् Sanskrit",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 कोंकणी Konkani",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 मैथिली Maithili",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 মৈতৈলোন্ Manipuri",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇳🇵 नेपाली Nepali",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 سنڌي Sindhi (RTL)",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 کٲشُر Kashmiri",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 डोगरी Dogri",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 बर' Bodo",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "🇮🇳 ᱥᱟᱱᱛᱟᱲᱤ Santali",
+          "onclick": "setLanguage(",
+          "disabled": false
+        },
+        {
+          "text": "Normal (100%)",
+          "onclick": "window.ElaraVoice.setFontScale(",
+          "disabled": false
+        },
+        {
+          "text": "Large (115%)",
+          "onclick": "window.ElaraVoice.setFontScale(",
+          "disabled": false
+        },
+        {
+          "text": "Extra Large",
+          "onclick": "window.ElaraVoice.setFontScale(",
+          "disabled": false
+        },
+        {
+          "text": "Toggle Mode",
+          "onclick": "toggleTheme()",
+          "disabled": false
+        },
+        {
+          "text": "Test Voice",
+          "onclick": "window.ElaraVoice.speak(",
+          "disabled": false
+        },
+        {
+          "text": "Reset App Cache",
+          "onclick": "if(confirm(",
+          "disabled": false
+        },
+        {
+          "text": "Log Out",
+          "onclick": "window.logoutUser()",
+          "disabled": false
+        }
+      ],
+      "selects": [],
+      "inputs": [
+        {
+          "type": "range",
+          "id": "ttsSpeedRange",
+          "oninput": "document.getElementById("
+        },
+        {
+          "type": "checkbox",
+          "id": "prefSms",
+          "onchange": "window.saveNotificationPref("
+        },
+        {
+          "type": "checkbox",
+          "id": "prefWhatsapp",
+          "onchange": "window.saveNotificationPref("
+        },
+        {
+          "type": "checkbox",
+          "id": "prefAbdm",
+          "onchange": "window.saveNotificationPref("
+        },
+        {
+          "type": "checkbox",
+          "id": "prefSound",
+          "onchange": "window.saveNotificationPref("
+        }
+      ]
+    }
+  },
+  "globalElements": {
+    "topbarButtons": [],
+    "flowStepButtons": [],
+    "bottomNavButtons": [],
+    "modals": []
+  },
+  "unhandledItems": []
+}

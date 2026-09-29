@@ -78,6 +78,15 @@ class ElaraApp {
     // Profile & Settings helpers
     window.savePatientProfile = () => this.savePatientProfile();
     window.loadProfileIntoForm = () => this.loadProfileIntoForm();
+    window.setNurseWorkstation = (st) => this.setNurseWorkstation(st);
+    window.requestTollFreeCallback = () => this.requestTollFreeCallback();
+    window.toggleAuthInputMode = () => this.toggleAuthInputMode();
+    window.saveNotificationPref = (k, v) => this.saveNotificationPref(k, v);
+    window.showAbdmStatus = () => this.showAbdmStatus();
+    window.callRider = (phone) => this.callRider(phone);
+    window.advanceDeliveryStep = () => this.advanceDeliveryStep();
+    window.copyAbhaId = () => this.copyAbhaId();
+    window.downloadAbhaCard = () => this.downloadAbhaCard();
 
     // Modals
     window.openSignUpModal = () => this.openSignUpModal();
@@ -94,6 +103,21 @@ class ElaraApp {
     this.renderQueueList();
     this.renderWorkstationViews();
     this.setupStoryboardPreviews();
+
+    // Initialize Theme
+    const savedTheme = (window.ElaraStorage && window.ElaraStorage.getTheme()) || "light";
+    document.body.classList.remove("theme-light", "theme-dark");
+    document.body.classList.add(savedTheme === "dark" ? "theme-dark" : "theme-light");
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+
+    // Initialize Font Scale
+    if (window.ElaraVoice && window.ElaraStorage) {
+      window.ElaraVoice.setFontScale(window.ElaraStorage.getFontScale() || "normal");
+    }
 
     // Initialize Language from Persistent Storage
     if (window.ElaraI18n) {
@@ -740,7 +764,57 @@ class ElaraApp {
       const badge = document.getElementById("settingsCurrentLangBadge");
       const meta = window.ElaraI18n.getCurrentLanguageMeta();
       if (badge) badge.textContent = `Active: ${meta.nativeName} (${meta.name})`;
+
+      const activeLang = window.ElaraI18n.getCurrentLanguage();
+      document.querySelectorAll("#screen-settings .lang-btn").forEach(btn => {
+        const isCurrent = btn.dataset.lang === activeLang;
+        btn.classList.toggle("border-teal-600", isCurrent);
+        btn.classList.toggle("bg-teal-50", isCurrent);
+        btn.classList.toggle("dark:bg-teal-900/50", isCurrent);
+      });
     }
+
+    if (window.ElaraStorage) {
+      const speed = window.ElaraStorage.getTtsSpeed() || 1.0;
+      const speedRange = document.getElementById("ttsSpeedRange");
+      const speedVal = document.getElementById("ttsSpeedVal");
+      if (speedRange) speedRange.value = speed;
+      if (speedVal) speedVal.textContent = speed + "x";
+
+      const scale = window.ElaraStorage.getFontScale() || "normal";
+      document.querySelectorAll(".font-scale-btn").forEach(btn => {
+        const match = btn.getAttribute("onclick")?.includes(`'${scale}'`);
+        btn.classList.toggle("border-teal-600", !!match);
+        btn.classList.toggle("bg-teal-100", !!match);
+      });
+
+      const prefs = window.ElaraStorage.getNotificationPrefs();
+      const sms = document.getElementById("prefSms");
+      const wa = document.getElementById("prefWhatsapp");
+      const abdm = document.getElementById("prefAbdm");
+      const sound = document.getElementById("prefSound");
+      if (sms) sms.checked = !!prefs.smsAlerts;
+      if (wa) wa.checked = !!prefs.whatsappUpdates;
+      if (abdm) abdm.checked = !!prefs.abdmSync;
+      if (sound) sound.checked = !!prefs.soundAlerts;
+    }
+  }
+
+  saveNotificationPref(key, checked) {
+    if (!window.ElaraStorage) return;
+    const prefs = window.ElaraStorage.getNotificationPrefs();
+    prefs[key] = checked;
+    window.ElaraStorage.saveNotificationPrefs(prefs);
+    if (window.ElaraAPI) {
+      window.ElaraAPI.put("/api/settings", { notifications: prefs }).catch(() => {});
+    }
+    const names = {
+      smsAlerts: "SMS OPD Tokens",
+      whatsappUpdates: "WhatsApp Updates",
+      abdmSync: "ABDM Health Locker Sync",
+      soundAlerts: "Critical Siren & Sound"
+    };
+    this.showToast(`${names[key] || key} turned ${checked ? "ON" : "OFF"}`, checked ? "🔔" : "🔕");
   }
 
   /* -------------------------------------------------------------
@@ -969,10 +1043,13 @@ class ElaraApp {
   setWorkerDecision(dec) {
     this.selectedWorkerDecision = dec;
     document.querySelectorAll(".radio-label-tile").forEach(t => t.classList.remove("active", "border-teal-600", "bg-teal-50/50"));
-    const selectedTile = event ? event.currentTarget : null;
-    if (selectedTile) {
-      selectedTile.classList.add("active", "border-teal-600", "bg-teal-50/50");
+    const tile = document.querySelector(`.radio-label-tile[onclick*="'${dec}'"]`) || (event ? event.currentTarget : null);
+    if (tile) {
+      tile.classList.add("active", "border-teal-600", "bg-teal-50/50");
+      const radio = tile.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
     }
+    this.showToast(`Clinical triage set to: ${dec.toUpperCase()}`, dec === 'urgent' ? '🔴' : dec === 'priority' ? '🟡' : '🟢');
   }
 
   appendNote(text) {
@@ -989,22 +1066,134 @@ class ElaraApp {
   }
 
   sendReferralNow() {
+    const deptSelect = document.getElementById("referralDept");
+    const deptName = deptSelect ? deptSelect.options[deptSelect.selectedIndex].text : "Duty Medical Officer (Room 104)";
+    const reason = document.getElementById("referralReason")?.value || "Acute febrile illness requiring physician evaluation";
     const refToken = "#REF-" + Math.floor(1000 + Math.random() * 9000);
+
     alert(
       `✅ ABDM Referral Token Generated: ${refToken}\n\n` +
       `Patient: Sunita Devi (P-1042)\n` +
-      `Referred to: Duty MO (Dr. Ananya Roy - Room 104)\n` +
+      `Department: ${deptName}\n` +
+      `Clinical Indication: ${reason}\n\n` +
       `Status: Immediate Priority Handover Recorded in ABDM EMR.`
     );
-    this.showToast(`Referral token ${refToken} sent to Doctor console!`, "📨");
+    this.showToast(`Referral token ${refToken} dispatched to Doctor!`, "📨");
     this.navigateTo("facility-admin");
   }
 
   exportFacilityReport() {
-    this.showToast("Exporting ABDM FHIR Triage Audit Report...", "📊");
+    this.showToast("Generating ABDM Triage & Surveillance CSV...", "📊");
+    const csvRows = [
+      ["Patient_ID", "Name", "Age", "Gender", "Primary_Symptom", "Triage_Urgency", "AI_Concordance", "Duty_Officer", "Time_Logged", "ABDM_Status"],
+      ["P-1042", "Sunita Devi", "42", "Female", "High Fever & Headache", "Priority", "Matched (100%)", "Dr. Ananya Roy", "09:42 AM", "Synced (FHIR R4)"],
+      ["P-1043", "Bikas Mohapatra", "58", "Male", "Chest Tightness & Dyspnea", "Urgent", "Matched (100%)", "Dr. Ananya Roy", "10:15 AM", "Synced (FHIR R4)"],
+      ["P-1044", "Meena Pradhan", "29", "Female", "Mild Sore Throat & Rhinitis", "Routine", "Matched (100%)", "Sister Priya", "10:30 AM", "Synced (FHIR R4)"],
+      ["P-1045", "Ramesh Senapati", "64", "Male", "Diabetic Foot Ulcer", "Priority", "Matched (100%)", "Dr. Ananya Roy", "10:48 AM", "Synced (FHIR R4)"]
+    ];
+    const csvContent = "data:text/csv;charset=utf-8," + csvRows.map(e => e.join(",")).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `ABDM_Sharda_PHC_Triage_Report_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    this.showToast("Facility Report CSV Downloaded!", "✓");
+  }
+
+  setNurseWorkstation(station) {
+    this.assignedWorkstation = station;
+    const wsTitle = document.getElementById("wsActiveCaseTitle");
+    if (wsTitle) {
+      wsTitle.textContent = `Patient P-1042: Sunita Devi (42 F) - ${station}`;
+    }
+    this.showToast(`Assigned Workstation: ${station}`, "🏥");
+  }
+
+  requestTollFreeCallback() {
+    const phone = (window.ElaraStorage && window.ElaraStorage.getProfile().phone) || "9876543210";
+    this.showToast(`Tele-triage callback scheduled for +91 ${phone}`, "📞");
     setTimeout(() => {
-      alert("📄 ABDM Triage Report Generated for Sharda PHC (128 cases, 91.8% AI concordance). Ready for download.");
-    }, 500);
+      alert(`📞 Toll-Free Tele-Triage Callback Initiated!\n\nRegistered Phone: +91 ${phone}\nEstimated Wait Time: < 3 minutes\nAssigned Counselor: Kendrapara PHC Tele-Helpdesk (1075/104)\n\nPlease keep your line available.`);
+    }, 400);
+  }
+
+  toggleAuthInputMode() {
+    const input = document.getElementById("authInput");
+    const label = document.getElementById("authInputLabel");
+    const toggleBtn = document.getElementById("authToggleModeBtn");
+    if (!input) return;
+    if (this.authMode === "abha_address") {
+      this.authMode = "mobile_or_id";
+      if (label) label.textContent = "Mobile Number / ABHA ID";
+      if (toggleBtn) toggleBtn.textContent = "Use ABHA Address (@abdm)";
+      input.value = "91-4820-1928-3341";
+      this.showToast("Switched to ABHA ID / Mobile Number", "🆔");
+    } else {
+      this.authMode = "abha_address";
+      if (label) label.textContent = "ABHA Address (PHR Handle)";
+      if (toggleBtn) toggleBtn.textContent = "Use Mobile / ABHA ID";
+      input.value = "sunitadevi@abdm";
+      this.showToast("Switched to ABHA Address (@abdm)", "🏷️");
+    }
+  }
+
+  showAbdmStatus() {
+    alert(
+      `🏥 Ayushman Bharat Digital Mission (ABDM) Gateway Status\n\n` +
+      `• Facility: Sharda PHC (Kendrapara, Odisha)\n` +
+      `• Facility Code: PHC-OD-KND-04\n` +
+      `• ABDM Milestone: M3 (Health Locker / FHIR Clinical Records Active)\n` +
+      `• Health Information Provider (HIP): Connected (99.98% uptime)\n` +
+      `• Health Information User (HIU): Connected\n` +
+      `• Active Registry Patients: 128 registered today\n` +
+      `• Encryption: AES-256 GCM end-to-end`
+    );
+  }
+
+  callRider(phone) {
+    this.showToast(`Dialing delivery rider at ${phone}...`, "📞");
+    window.location.href = `tel:${phone}`;
+  }
+
+  advanceDeliveryStep() {
+    const dot4 = document.getElementById("trackStepDot_4");
+    const text4 = document.getElementById("trackStepText_4");
+    const eta = document.getElementById("trackingEta");
+    const status = document.getElementById("trackingOrderStatus");
+    if (dot4) {
+      dot4.classList.remove("bg-slate-200", "text-slate-600", "border-slate-300");
+      dot4.classList.add("bg-emerald-600", "text-white", "border-emerald-600", "shadow-sm");
+      dot4.textContent = "✓";
+    }
+    if (text4) {
+      text4.classList.remove("text-slate-500", "font-medium");
+      text4.classList.add("text-emerald-900", "font-bold");
+      text4.innerHTML = `4. Delivered <span class="text-emerald-600 font-bold">✓ Just Now</span>`;
+    }
+    if (eta) eta.textContent = "Delivered ✓";
+    if (status) status.textContent = "Handed over to Sunita Devi at Navrangpura PHC Ward 4";
+    this.showToast("Order #ORD-7821 marked as Delivered!", "🎉");
+  }
+
+  copyAbhaId() {
+    const idEl = document.getElementById("abhaCardId");
+    const text = idEl ? idEl.textContent.trim() : "91-4820-1928-3341";
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        this.showToast(`ABHA ID ${text} copied to clipboard!`, "📋");
+      }).catch(() => {
+        this.showToast(`ABHA ID: ${text}`, "📋");
+      });
+    } else {
+      this.showToast(`ABHA ID: ${text}`, "📋");
+    }
+  }
+
+  downloadAbhaCard() {
+    this.showToast("Exporting Digital ABHA Health Card...", "🪪");
+    window.print();
   }
 
   openAuditModal() {

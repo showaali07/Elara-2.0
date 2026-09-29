@@ -147,7 +147,7 @@
       </div>
 
       <!-- ABDM Clinic Tag -->
-      <div class="hidden xl:flex items-center gap-2 bg-teal-50 border border-teal-200/80 px-3 py-1.5 rounded-full text-xs">
+      <div class="hidden xl:flex items-center gap-2 bg-teal-50 border border-teal-200/80 px-3 py-1.5 rounded-full text-xs cursor-pointer hover:bg-teal-100 transition-colors" onclick="window.showAbdmStatus()" title="Click to view ABDM Milestone 3 Gateway Status">
         <span class="w-2 h-2 rounded-full bg-teal-600 animate-pulse"></span>
         <span class="font-semibold text-teal-950">ABDM Integrated</span>
       </div>
@@ -485,6 +485,24 @@
           <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('facility-admin'); closeLeftMenu();">
             12. Facility Admin
           </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('search'); closeLeftMenu();">
+            13. Search
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('medicines'); closeLeftMenu();">
+            14. Pharmacy
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('order-tracking'); closeLeftMenu();">
+            15. Order Tracking
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('emergency'); closeLeftMenu();">
+            16. Emergency SOS
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('profile'); closeLeftMenu();">
+            17. Profile & ABHA
+          </button>
+          <button class="step-nav-btn text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer" onclick="goToScreen('settings'); closeLeftMenu();">
+            18. Settings
+          </button>
         </div>
       </div>
 
@@ -597,9 +615,9 @@
                 <div>
                   <label class="block text-xs font-semibold text-slate-700 mb-1.5">Preferred Intake Dialect / Language</label>
                   <div class="relative">
-                    <select class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-white font-medium focus:border-teal-600 focus:ring-2 focus:ring-teal-100">
+                    <select id="patientIntakeLanguage" onchange="setLanguage(this.value)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-white font-medium focus:border-teal-600 focus:ring-2 focus:ring-teal-100 cursor-pointer">
                       <option value="hi" selected>Hindi (हिंदी - Regional Dialects Supported)</option>
-                      <option value="or">Odia (ଓଡ଼ିଆ - Sambalpuri / Coastal)</option>
+                      <option value="od">Odia (ଓଡ଼ିଆ - Sambalpuri / Coastal)</option>
                       <option value="bn">Bengali (বাংলা)</option>
                       <option value="te">Telugu (తెలుగు)</option>
                       <option value="en">English (Standard Medical)</option>
@@ -690,10 +708,10 @@
                   </div>
                   <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1.5">Assigned Work Station</label>
-                    <select class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-white font-medium">
-                      <option selected>OPD Triage Station 1</option>
-                      <option>Emergency Screening Room</option>
-                      <option>Inpatient Ward Bed 1-12</option>
+                    <select id="nurseWorkstationSelect" onchange="window.setNurseWorkstation(this.value)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-white font-medium cursor-pointer">
+                      <option value="OPD Triage Station 1" selected>OPD Triage Station 1</option>
+                      <option value="Emergency Screening Room">Emergency Screening Room</option>
+                      <option value="Inpatient Ward Bed 1-12">Inpatient Ward Bed 1-12</option>
                     </select>
                   </div>
                 </div>
@@ -968,7 +986,7 @@
                     <span class="text-xs text-slate-600">Toll-free tele-triage assistance is reachable at 1075 / 104</span>
                   </div>
                 </div>
-                <button class="px-4 py-2 rounded-full bg-white border border-teal-200 text-xs font-bold text-teal-800 hover:bg-teal-50 transition-colors shadow-xs">
+                <button onclick="window.requestTollFreeCallback()" class="px-4 py-2 rounded-full bg-white border border-teal-200 text-xs font-bold text-teal-800 hover:bg-teal-50 transition-colors shadow-xs cursor-pointer">
                   Request Callback
                 </button>
               </div>
@@ -990,8 +1008,8 @@
                 <div class="space-y-4">
                   <div>
                     <div class="flex items-center justify-between mb-2">
-                      <label class="text-xs font-bold text-slate-900">Mobile Number / ABHA ID</label>
-                      <span class="text-xs text-teal-700 font-semibold cursor-pointer">Use ABHA Address (@abdm)</span>
+                      <label id="authInputLabel" class="text-xs font-bold text-slate-900">Mobile Number / ABHA ID</label>
+                      <span id="authToggleModeBtn" class="text-xs text-teal-700 font-semibold cursor-pointer hover:underline" onclick="window.toggleAuthInputMode()">Use ABHA Address (@abdm)</span>
                     </div>
                     <div class="relative">
                       <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-teal-700">
@@ -1122,11 +1140,11 @@
               </div>
               <div class="flex items-center bg-teal-50 border border-teal-100 px-3 py-1.5 rounded-full text-xs">
                 <span class="material-symbols-outlined text-teal-700 text-[18px] mr-1.5">translate</span>
-                <button class="px-2 py-0.5 rounded-full bg-white text-teal-900 font-bold shadow-xs">EN</button>
+                <button class="px-2 py-0.5 rounded-full hover:bg-white text-slate-700 font-medium cursor-pointer" onclick="setLanguage('en')">EN</button>
                 <span class="px-1 text-teal-300">|</span>
-                <button class="px-2 py-0.5 rounded-full hover:bg-white text-slate-700 font-medium" onclick="setLanguage('hi')">हिं</button>
+                <button class="px-2 py-0.5 rounded-full hover:bg-white text-slate-700 font-medium cursor-pointer" onclick="setLanguage('hi')">हिं</button>
                 <span class="px-1 text-teal-300">|</span>
-                <button class="px-2 py-0.5 rounded-full hover:bg-white text-slate-700 font-medium" onclick="setLanguage('od')">ଓଡ଼ି</button>
+                <button class="px-2 py-0.5 rounded-full hover:bg-white text-slate-700 font-medium cursor-pointer" onclick="setLanguage('od')">ଓଡ଼ି</button>
               </div>
             </div>
           </div>
@@ -2328,10 +2346,14 @@
                 </div>
               </div>
 
-              <div class="pt-4 mt-4 border-t border-slate-100 flex items-center gap-3">
-                <button onclick="alert('Calling delivery rider Bikram Mohanty at +91 94370-11223...')" class="flex-1 py-2.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
+              <div class="pt-4 mt-4 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                <button onclick="window.callRider('+919437011223')" class="flex-1 py-2.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
                   <span class="material-symbols-outlined text-[17px]">call</span>
                   <span>Call Rider (+91 94370-11223)</span>
+                </button>
+                <button onclick="window.advanceDeliveryStep()" class="py-2.5 px-4 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs">
+                  <span class="material-symbols-outlined text-[17px]">check_circle</span>
+                  <span>Simulate Delivery Completion</span>
                 </button>
               </div>
             </div>
@@ -2540,10 +2562,20 @@
                 </div>
               </div>
 
-              <!-- QR Code Mock for Clinic Scanner -->
-              <div class="sm:col-span-4 flex flex-col items-center justify-center p-3 bg-white rounded-2xl text-slate-900 shadow-sm">
-                <span class="material-symbols-outlined text-[64px] text-slate-900">qr_code_2</span>
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5">Scan at PHC OPD</span>
+              <!-- QR Code & ABHA Action Buttons -->
+              <div class="sm:col-span-4 flex flex-col items-center justify-center p-3.5 bg-white rounded-2xl text-slate-900 shadow-sm gap-2">
+                <span class="material-symbols-outlined text-[54px] text-slate-900">qr_code_2</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Scan at PHC OPD</span>
+                <div class="flex items-center gap-1.5 w-full pt-1">
+                  <button onclick="window.copyAbhaId()" class="flex-1 py-1.5 px-2 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-900 font-bold text-[11px] flex items-center justify-center gap-1 transition-colors cursor-pointer border border-teal-200">
+                    <span class="material-symbols-outlined text-[14px]">content_copy</span>
+                    <span>Copy ID</span>
+                  </button>
+                  <button onclick="window.downloadAbhaCard()" class="flex-1 py-1.5 px-2 rounded-lg bg-teal-700 hover:bg-teal-800 text-white font-bold text-[11px] flex items-center justify-center gap-1 transition-colors cursor-pointer shadow-xs">
+                    <span class="material-symbols-outlined text-[14px]">print</span>
+                    <span>Print Card</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -2860,36 +2892,36 @@
             </h3>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <label class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer">
+              <label class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer hover:bg-slate-100/70 transition-colors">
                 <div>
                   <strong class="block text-slate-900 font-bold" data-i18n="smsAlerts">SMS OPD Tokens & Prescriptions</strong>
                   <span class="text-slate-500">Sent to registered mobile number</span>
                 </div>
-                <input type="checkbox" id="prefSms" checked class="accent-teal-700 w-4 h-4">
+                <input type="checkbox" id="prefSms" checked onchange="window.saveNotificationPref('smsAlerts', this.checked)" class="accent-teal-700 w-4 h-4 cursor-pointer">
               </label>
 
-              <label class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer">
+              <label class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer hover:bg-slate-100/70 transition-colors">
                 <div>
                   <strong class="block text-slate-900 font-bold" data-i18n="whatsappUpdates">WhatsApp Order & Triage Updates</strong>
                   <span class="text-slate-500">Instant Jan Aushadhi tracking receipts</span>
                 </div>
-                <input type="checkbox" id="prefWhatsapp" checked class="accent-teal-700 w-4 h-4">
+                <input type="checkbox" id="prefWhatsapp" checked onchange="window.saveNotificationPref('whatsappUpdates', this.checked)" class="accent-teal-700 w-4 h-4 cursor-pointer">
               </label>
 
-              <label class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer">
+              <label class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer hover:bg-slate-100/70 transition-colors">
                 <div>
                   <strong class="block text-slate-900 font-bold" data-i18n="abdmSync">ABDM Health Locker Automatic Sync</strong>
                   <span class="text-slate-500">Sync with Ayushman Bharat PHR</span>
                 </div>
-                <input type="checkbox" id="prefAbdm" checked class="accent-teal-700 w-4 h-4">
+                <input type="checkbox" id="prefAbdm" checked onchange="window.saveNotificationPref('abdmSync', this.checked)" class="accent-teal-700 w-4 h-4 cursor-pointer">
               </label>
 
-              <label class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer">
+              <label class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer hover:bg-slate-100/70 transition-colors">
                 <div>
                   <strong class="block text-slate-900 font-bold" data-i18n="soundAlerts">Critical Siren & Audio Chimes</strong>
                   <span class="text-slate-500">Audible notification for urgent vitals</span>
                 </div>
-                <input type="checkbox" id="prefSound" checked class="accent-teal-700 w-4 h-4">
+                <input type="checkbox" id="prefSound" checked onchange="window.saveNotificationPref('soundAlerts', this.checked)" class="accent-teal-700 w-4 h-4 cursor-pointer">
               </label>
             </div>
           </div>
@@ -3058,7 +3090,7 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 flex items-center gap-3">
-        <button id="medDetailAddBtn" class="flex-1 py-3 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer">
+        <button id="medDetailAddBtn" onclick="window.ElaraPharmacy.addCurrentDetailToCart()" class="flex-1 py-3 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer">
           <span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
           <span data-i18n="addToCart">Add to Jan Aushadhi Cart</span>
         </button>
